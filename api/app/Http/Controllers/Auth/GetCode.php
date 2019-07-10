@@ -15,13 +15,11 @@ class GetCode extends Controller {
 
     function handle(Request $request) {
         $this->validate($request, [
-             'user_id' => 'required|string',
              'email' => 'required|string'
         ]);
         $code = new Code();
-        $code->user_id = $request->input('user_id');
+        $code->email = $request->input('email');
         $code->sendMsg($request->input('email'));
         $code->save();
-        return response('ok');
     }
 }
