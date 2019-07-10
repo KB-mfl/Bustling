@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use App\User;
-use Illuminate\Support\Facades\Gate;
+use App\Models\ApiToken;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -32,7 +33,21 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('api', function ($request) {
             if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
+                /**
+                 * @var $api_token ApiToken
+                 */
+                $api_token = ApiToken::query()->where('token', $request->input('api_token'))->first();
+                if ($api_token) {
+                    if ($api_token->expired_at < Carbon::now()) {
+                        return null;
+                    } else {
+                        $api_token->addTime($request->input('remember'));
+                        $api_token->save();
+                        return $api_token->user();
+                    }
+                }
+            } else {
+                return null;
             }
         });
     }

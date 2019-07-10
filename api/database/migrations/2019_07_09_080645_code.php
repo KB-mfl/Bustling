@@ -15,7 +15,6 @@ class Code extends Migration
     {
         Schema::create('code', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_id')->comment('用户id');
             $table->string('code')->comment('验证码');
             $table->timestamp('expired_at')->comment('过期时间');
 
