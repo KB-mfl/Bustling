@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
  * Class Code
  * @package App\Models
  *
- * @property string $user_id
+ * @property string $email
  * @property string $code
  * @property string $expired_at
  */
@@ -34,8 +34,8 @@ class Code extends Model {
         while (strlen($codeStr) < 6) {
             $codeStr = '0' . $codeStr;
         }
-        $this->code = $codeStr;
-        $this->expired_at = Carbon::now()->addMinutes(3);
+        $this->attributes['code'] = $codeStr;
+        $this->attributes['expired_at'] = Carbon::now()->addMinutes(30);
     }
 
 

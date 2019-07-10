@@ -18,6 +18,7 @@ use PHPUnit\Exception;
  * @property integer $gender
  * @property string $username
  * @property string $email
+ * @property string $id
  * @property string $password
  * @property string $introduction
  * @property string $avatar
@@ -26,18 +27,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable;
 
+    protected $table = 'user';
     protected $keyType = 'string';
+
+    public $incrementing = false;
 
     use SoftDeletes;
 
     function __construct(array $attributes = []) {
         parent::__construct($attributes);
 
-        $attributes['id'] = ShortUuid::uuid4();
+        $this->attributes['id'] = ShortUuid::uuid4();
     }
 
     function setPasswordAttribute($password) {
-        $this->password = app('hash')->make(sha1($password));
+        $this->attributes['password'] = app('hash')->make(sha1($password));
     }
 
     function apiToken() {
