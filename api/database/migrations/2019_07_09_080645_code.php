@@ -17,6 +17,7 @@ class Code extends Migration
             $table->increments('id');
             $table->string('code')->comment('验证码');
             $table->timestamp('expired_at')->comment('过期时间');
+            $table->string('email')->comment('用户邮箱');
 
             $table->timestamps();
             $table->softDeletes();
