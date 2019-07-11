@@ -20,19 +20,23 @@ class Login extends Controller {
             'password' => 'required|string|size:40',
             'remember' => 'boolean|nullable'
         ]);
+
         /**
          * @var $user User
          */
         $user = User::query()->where('username', $request->input('username'))->first();
         if (!$user) return parent::error(401, '用户名或密码错误');
-        if (!app('hash')->check($user->password, $request->input('password'))) return parent::error(401, '用户名或密码错误');
+        if (!app('hash')->check(sha1($request->input('password')), $user->password)){
+            return parent::error(401, '用户名或密码错误');
+        }
 
         $api_token = new ApiToken();
+        $api_token->user_id = $user->id;
         $api_token->addTime($request->input('remember'));
         $api_token->save();
 
         return response([
-            'api_token' => $api_token->token
+            'token' => $api_token->token
         ]);
     }
 }

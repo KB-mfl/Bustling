@@ -35,7 +35,7 @@ class ApiToken extends Model {
     {
         parent::__construct($attributes);
 
-        $attributes['token'] = Uuid::uuid4();
+        $this->attributes['token'] = Uuid::uuid4();
     }
 
     function user() {

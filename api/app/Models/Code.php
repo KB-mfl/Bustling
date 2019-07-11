@@ -35,7 +35,7 @@ class Code extends Model {
             $codeStr = '0' . $codeStr;
         }
         $this->attributes['code'] = $codeStr;
-        $this->attributes['expired_at'] = Carbon::now()->addMinutes(30);
+        $this->attributes['expired_at'] = Carbon::now()->addMinutes(3);
     }
 
 
