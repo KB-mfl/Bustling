@@ -15,9 +15,9 @@ class Role extends Migration
     public function up()
     {
         Schema::create('role', function (Blueprint $table) {
-           $table->integer('id')->comment('role_id');
-           $table->string('alias')->comment('alias');
-           $table->string('name')->comment('name');
+           $table->integer('id')->unique()->comment('role_id');
+           $table->string('alias')->unique()->comment('alias');
+           $table->string('name')->unique()->comment('name');
            $table->primary('id');
 
            $table->softDeletes();

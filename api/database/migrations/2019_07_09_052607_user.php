@@ -15,9 +15,9 @@ class User extends Migration
     public function up()
     {
         Schema::create('user', function (Blueprint $table) {
-            $table->string('id')->comment('short uuid');
+            $table->string('id')->unique()->comment('short uuid');
             $table->integer('role_id')->default(1)->comment('角色id');
-            $table->string('username')->comment('用户名');
+            $table->string('username')->unique()->comment('用户名');
             $table->string('email')->unique()->comment('用户邮箱');
             $table->string('avatar')->nullable()->comment('用户头像');
             $table->string('password')->comment('密码');
