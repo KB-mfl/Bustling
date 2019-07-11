@@ -19,10 +19,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $id
  * @property string $user_id
  * @property string $token
- * @property string $create_at
- * @property string $expired_at
- * @property string $update_at
- * @property string $delete_at
+ * @property Carbon $create_at
+ * @property Carbon $expired_at
+ * @property Carbon $update_at
+ * @property Carbon $delete_at
  */
 
 class ApiToken extends Model {

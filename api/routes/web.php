@@ -25,5 +25,5 @@ $router->group([
 
     $router->post('login', 'Login@handle');
 
-    $router->get('code', 'GetCode@handle');
+    $router->post('code', 'GetCode@handle');
 });

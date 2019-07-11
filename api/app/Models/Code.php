@@ -18,7 +18,10 @@ use Illuminate\Support\Facades\Mail;
  *
  * @property string $email
  * @property string $code
- * @property string $expired_at
+ * @property Carbon $expired_at
+ * @property Carbon $create_at
+ * @property Carbon $update_at
+ * @property Carbon $delete_at
  */
 class Code extends Model {
 
