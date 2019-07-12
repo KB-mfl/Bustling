@@ -56,9 +56,10 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
+ $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+     \Barryvdh\Cors\HandleCors::class,
+ ]);
 
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
@@ -79,7 +80,9 @@ $app->singleton(
  $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
  $app->register(Illuminate\Mail\MailServiceProvider::class);
+ $app->register(Barryvdh\Cors\ServiceProvider::class);
 
+ $app->configure('cors');
  $app->configure('mail');
  $app->alias('mailer', Illuminate\Mail\Mailer::class);
  $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
