@@ -42,7 +42,7 @@ class ApiToken extends Model {
         return $this->belongsTo('App\Model\User', 'user_id', 'id');
     }
 
-    function addTime($remember) {
+    function addTime($remember = false) {
         if ($remember) {
             $this->attributes['expired_at'] = Carbon::now()->addMonth();
         } else {
