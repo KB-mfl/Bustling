@@ -47,4 +47,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany('App\Models\ApiToken', 'user_id', 'id');
     }
 
+    function getData($type = 'list') {
+        $data = [];
+        if ($type === 'detail') {
+            $data['gender'] = $this->attributes['gender'];
+            $data['email'] = $this->attributes['email'];
+            $data['introduction'] = $this->attributes['introduction'];
+        }
+        $data['username'] = $this->attributes['username'];
+        $data['avatar'] = $this->attributes['avatar'];
+        return $data;
+    }
+
 }
