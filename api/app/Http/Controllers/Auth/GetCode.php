@@ -12,6 +12,23 @@ use App\Models\Code;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+/**
+ * @api {POST} auth/code 获取验证码-GetCode
+ * @apiGroup Auth
+ * @apiName GetCode
+ * @apiPermission All
+ * @apiParam {string} email 验证邮箱
+ * @apiParamExample {json} Request-Example:
+ * {
+ *      'email': 'haha@example.com'
+ * }
+ * @apiError {string} failed 获取失败
+ * @apiErrorExample {json} 403:
+ * {
+ *      'message': '请不要频繁发送信息哦'
+ * }
+ */
+
 class GetCode extends Controller {
 
     function handle(Request $request) {
