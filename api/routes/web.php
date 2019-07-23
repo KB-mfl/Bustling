@@ -26,4 +26,8 @@ $router->group([
     $router->post('login', 'Login@handle');
 
     $router->post('code', 'GetCode@handle');
+
+    $router->get('auth', 'GetAuth@handle');
+
+    $router->put('forgot', 'Forgot@handle');
 });
