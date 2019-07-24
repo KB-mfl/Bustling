@@ -37,7 +37,9 @@ class Forgot extends Controller {
         ]);
 
         $email = $request->input('email');
-
+        $user = User::query()->where('email', $email)->first();
+        if (!$user) return parent::error(403, "该用户不存在");
+        
         $msg = '您的密码已修改，快去登陆看看吧。';
         Mail::raw($msg, function ($massage) use ($email) {
             $massage->to($email);
