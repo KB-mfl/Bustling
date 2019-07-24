@@ -39,7 +39,7 @@ class GetAuth extends Controller {
         /**
          * @var $user User
          */
-        $user = Auth::user()d;
+        $user = Auth::user();
         if ($user === null) return parent::error(401);
 //        dd($user);
         return response($user->getData('detail'));
