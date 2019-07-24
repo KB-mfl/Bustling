@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
  * @apiSuccess {string} avatar 头像
  * @apiSuccess {string} email 邮箱
  * @apiSuccess {integer} gender 性别
+ * @apiSuccess {integer} roleId 角色
  * @apiSuccess {text} introduction 简介
  * @apiSuccess {json} Success-Example:
  * {
