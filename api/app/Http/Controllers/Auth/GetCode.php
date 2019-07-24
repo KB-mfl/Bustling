@@ -40,12 +40,11 @@ class GetCode extends Controller {
          * @var $pre Code
          */
         $pre = Code::query()->where('email', $request->input('email'))->latest()->first();
-        if (!$pre) {
-            if ($pre->create_at->addMinute() > Carbon::now()) {
+        if ($pre) {
+            if ($pre->created_at->addMinute() > Carbon::now()) {
                 return parent::error(403, '请不要频繁发送信息哦');
             }
         }
-
         $code = new Code();
         $code->email = $request->input('email');
         $code->sendMsg($request->input('email'));

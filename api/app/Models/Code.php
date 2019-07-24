@@ -19,13 +19,15 @@ use Illuminate\Support\Facades\Mail;
  * @property string $email
  * @property string $code
  * @property Carbon $expired_at
- * @property Carbon $create_at
- * @property Carbon $update_at
- * @property Carbon $delete_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $deleted_at
  */
 class Code extends Model {
 
     protected $table = 'code';
+
+    protected $dates = ['expired_at'];
 
     use SoftDeletes;
 

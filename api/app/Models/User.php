@@ -21,6 +21,7 @@ use PascalDeVink\ShortUuid\ShortUuid;
  * @property string $password
  * @property string $introduction
  * @property string $avatar
+ * @property integer $role_id
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -50,12 +51,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     function getData($type = 'list') {
         $data = [];
         if ($type === 'detail') {
-            $data['gender'] = $this->attributes['gender'];
-            $data['email'] = $this->attributes['email'];
             $data['introduction'] = $this->attributes['introduction'];
+            $data['roleId'] = $this->attributes['role_id'];
         }
         $data['username'] = $this->attributes['username'];
         $data['avatar'] = $this->attributes['avatar'];
+        $data['gender'] = $this->attributes['gender'];
+        $data['email'] = $this->attributes['email'];
         return $data;
     }
 
