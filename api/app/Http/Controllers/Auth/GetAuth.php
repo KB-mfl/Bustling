@@ -10,7 +10,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -29,20 +28,20 @@ use Illuminate\Support\Facades\Auth;
  *      'avatar': 'picture.png',
  *      'email': 'haha@example.com'
  *      'gender': 1
+ *      'roleId': 1
  *      'introduction': 'this is a good people'
  * }
  */
 
 class GetAuth extends Controller {
 
-    function handle(Request $request) {
+    function handle() {
         /**
          * @var $user User
          */
-        $user = Auth::user();
-        if (!$user) return parent::error(401);
-
-        $response = $user->getData();
-        return response($response);
+        $user = Auth::user()d;
+        if ($user === null) return parent::error(401);
+//        dd($user);
+        return response($user->getData('detail'));
     }
 }

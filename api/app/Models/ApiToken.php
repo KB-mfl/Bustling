@@ -19,15 +19,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $id
  * @property string $user_id
  * @property string $token
- * @property Carbon $create_at
+ * @property Carbon $created_at
  * @property Carbon $expired_at
- * @property Carbon $update_at
- * @property Carbon $delete_at
+ * @property Carbon $updated_at
+ * @property Carbon $deleted_at
+ *
+ * @property-read User $user
  */
 
 class ApiToken extends Model {
 
     protected $table = 'api_token';
+
+    protected $dates = ['expired_at'];
 
     use SoftDeletes;
 
@@ -39,7 +43,7 @@ class ApiToken extends Model {
     }
 
     function user() {
-        return $this->belongsTo('App\Model\User', 'user_id', 'id');
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
     function addTime($remember = false) {

@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\ApiToken;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,23 +31,20 @@ class AuthServiceProvider extends ServiceProvider
         // the User instance via an API token or any other method necessary.
 
         $this->app['auth']->viaRequest('api', function ($request) {
-            if ($request->input('api_token')) {
-                /**
-                 * @var $api_token ApiToken
-                 */
-                $api_token = ApiToken::query()->where('token', $request->input('api_token'))->first();
-                if ($api_token) {
-                    if ($api_token->expired_at < Carbon::now()) {
-                        return null;
-                    } else {
-                        $api_token->addTime($request->input('remember'));
-                        $api_token->save();
-                        return $api_token->user();
-                    }
-                }
-            } else {
+            /**
+            * @var $api_token ApiToken
+            */
+            $token = $request->header('Api_Token', '');
+            $api_token = ApiToken::query()->where('token', $token)->first();
+            if (!$api_token) return null;
+            if ($api_token->expired_at->timestamp < Carbon::now()->timestamp) {
                 return null;
+            } else {
+                $api_token->addTime($request->input('remember'));
+                $api_token->save();
+                return $api_token->user;
             }
+
         });
     }
 }
