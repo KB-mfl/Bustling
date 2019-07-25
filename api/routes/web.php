@@ -31,3 +31,9 @@ $router->group([
 
     $router->put('forgot', 'Forgot@handle');
 });
+
+$router->group([
+    'namespace' => 'File'
+], function () use ($router) {
+    $router->post('/upload', 'Upload@handle');
+});
