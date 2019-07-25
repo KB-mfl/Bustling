@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
  * @apiSuccess {integer} gender 性别
  * @apiSuccess {integer} roleId 角色
  * @apiSuccess {text} introduction 简介
- * @apiSuccess {json} Success-Example:
+ * @apiSuccessExample {json} Success-Example:
  * {
  *      'username': 'test',
  *      'avatar': 'picture.png',
