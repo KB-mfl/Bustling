@@ -22,6 +22,8 @@ use PascalDeVink\ShortUuid\ShortUuid;
  * @property string $introduction
  * @property string $avatar
  * @property integer $role_id
+ *
+ * @property-read Role $role
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -48,16 +50,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany('App\Models\ApiToken', 'user_id', 'id');
     }
 
+    function role() {
+        return $this->belongsTo('App\Models\Role', 'role_id', 'id');
+    }
+
     function getData($type = 'list') {
         $data = [];
         if ($type === 'detail') {
-            $data['introduction'] = $this->attributes['introduction'];
-            $data['roleId'] = $this->attributes['role_id'];
+            $data['introduction'] = $this->introduction;
+            $data['role'] = $this->role->data;
         }
-        $data['username'] = $this->attributes['username'];
-        $data['avatar'] = $this->attributes['avatar'];
-        $data['gender'] = $this->attributes['gender'];
-        $data['email'] = $this->attributes['email'];
+        $data['username'] = $this->username;
+        $data['avatar'] = $this->avatar;
+        $data['gender'] = $this->gender;
+        $data['email'] = $this->email;
         return $data;
     }
 
