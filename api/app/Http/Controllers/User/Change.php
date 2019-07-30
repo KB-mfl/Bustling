@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Auth;
  * @apiGroup User
  * @apiName Change
  * @apiPermission Login
- * @apiParam [string] username 用户名
- * @apiParam [string] avatar 头像
- * @apiParam [string] introduction 个人介绍
- * @apiParam [integer] gender 性别
+ * @apiParam {string} [username] 用户名
+ * @apiParam {string} [avatar] 头像
+ * @apiParam {string} [introduction] 个人介绍
+ * @apiParam {integer} [gender] 性别
  * @apiParamExample {json} Request-Example:
  * {
  *      'username': 'test',
