@@ -21,7 +21,7 @@ $router->group([
     'namespace' => 'Auth',
     'prefix' => 'auth'
 ], function () use ($router) {
-    $router->post('register', 'register@handle');
+    $router->post('register', 'Register@handle');
 
     $router->post('login', 'Login@handle');
 
@@ -36,4 +36,13 @@ $router->group([
     'namespace' => 'File'
 ], function () use ($router) {
     $router->post('/upload', 'Upload@handle');
+});
+
+$router->group([
+    'namespace' => 'User',
+    'prefix' => 'user',
+], function () use ($router) {
+    $router->put('profile', 'Change@handle');
+
+    $router->put('security', 'ResetPassword@handle');
 });
