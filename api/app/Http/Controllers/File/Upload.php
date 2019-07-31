@@ -43,7 +43,7 @@ class Upload extends Controller {
 
         $mimes = new MimeTypes();
         $extension = $mimes->getExtension($mimeType);
-        $file->move(storage_path('app/public/resource'), "$filename.$extension");
+        $file->move(storage_path('app/public/'), "$filename.$extension");
 
         return response([
             'filename' => "$filename.$extension",
