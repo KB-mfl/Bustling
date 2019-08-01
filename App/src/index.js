@@ -2,32 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App/App';
+import Layout from './Auth/index'
+import Index from './Index/index'
 import preprocess from './preprocess'
-import Auth from './Auth/loginIndex'
-import Layout from  './Auth/Layout'
 import { Spin } from 'antd'
-import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render((
-  <Spin size="large">
-      <div style={{ width: '100%', height:'100vh'}}/>
-  </Spin>
+    <Spin size="large">
+        <div style={{ width: '100%', height:'100vh'}}/>
+    </Spin>
 ),document.getElementById('root'));
 
-const LoginUser = ['admin', 'vip', 'tourist'];
+const LoginUser = ['admin', 'user', 'tourist'];
 
-const getPathname = () => {
-    const pathIndex = window.location.pathname.split('/');
-    const path = pathIndex[1] || '';
-    return LoginUser.indexOf(path);
-
-};
-if (getPathname()){
-    preprocess().then(() => {
-        ReactDOM.render(<App/>, document.getElementById('root'));
-    }).catch(() => {
-        ReactDOM.render(<App/>, document.getElementById('root'));
-    });
-} else {
-    ReactDOM.render(<Layout/>, document.getElementById('root'));
-}
+preprocess().then(() => {
+    console.log(22);
+    ReactDOM.render(<App/>, document.getElementById('root'));
+}).catch(() => {
+    const url =window.location.pathname.split('/')[1].toString();
+    if (url ==='login'|| 'register'){
+        ReactDOM.render(<Layout/>, document.getElementById('root'));
+    }
+    else if(url === 'forgot'){
+        ReactDOM.render(<Layout/>, document.getElementById('root'));
+    } else {
+        ReactDOM.render(<Index/>, document.getElementById('root'));
+    }
+});

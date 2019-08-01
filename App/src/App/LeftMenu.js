@@ -10,19 +10,38 @@ class LeftMenu extends React.Component{
             collapsed:store.get('collapsed') || false,
         };
         this.leftMenuList = [
+            {key: 'homepage',title:'首页',icon:'key'},
             {key: 'dashboard', title: '控制中心', icon: 'pie-chart'},
             {key: 'notification', title: '通知', icon: 'notification'},
-            {key: 'profit', title: '个人中心', icon: 'user'}
-        ]
+            {key: 'writing',title:'写作',icon:'read'},
+            {key: 'profit', title: '个人中心', icon: 'user'},
+        ];
         console.log(props);
     }
+    componentWillMount() {
+        this.isRole();
+    }
+
     getDefaultKey = () => {
         let sider = this.leftMenuList.find(o => this.props.location.pathname.match(o.key)) || {};
         return sider.key;
     };
 
+    isRole = () =>{
+        const admin ={
+            key:'manage',
+            title:'设置',
+            icon:'setting'
+        };
+        if (window.auth===0){
+            this.leftMenuList.splice(3,1);
+            this.leftMenuList.push(admin);
+        }
+        // console.log(this.leftMenuList);
+    };
+
     itemClick = ({item, key}) => {
-        window.location.href = '/' + key
+        window.location.href = '/' + window.role + '/' + key
     };
 
     controlCollapse = () => {
@@ -50,10 +69,11 @@ class LeftMenu extends React.Component{
                         onClick={this.controlCollapse}
                     />
                 </div>
-                <Menu theme="light" mode="inline" defaultSelectedKeys={[this.getDefaultKey()]} onClick={this.itemClick}>
+                <Menu theme="light" mode="inline" className="LeftItem" defaultSelectedKeys={[this.getDefaultKey()]} onClick={this.itemClick}>
+
                     {this.leftMenuList.map(o =>
                         <Menu.Item key={o.key}>
-                            <Icon type={o.icon} />
+                            <Icon type={o.icon}/>
                             <span>{o.title}</span>
                         </Menu.Item>)
                     }

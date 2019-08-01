@@ -69,10 +69,10 @@ class login extends React.Component {
                     <Button type="primary" htmlType="submit" style={{width: '100%'}} loading={this.state.submiting} onClick={this.handleSubmit}>登陆</Button>
                 </FormItem>
                 <Form.Item>
-                    <a style={{float:"right"}} href="">
+                    <a style={{float:"right"}} href="/forgot">
                         Forgot password
                     </a>
-                    <a href="">register now!</a>
+                    <a href="/register">register now!</a>
                 </Form.Item>
             </Form>
         )

@@ -1,8 +1,8 @@
 import React from 'react'
 import httpService from '../../service'
-import { message, Row,Col } from 'antd'
+import { message, Row,Col } from 'antd/lib/index'
 import CryptoJS from 'crypto-js';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button } from 'antd/lib/index';
 import store from 'store'
 const FormItem = Form.Item;
 class register extends React.Component {

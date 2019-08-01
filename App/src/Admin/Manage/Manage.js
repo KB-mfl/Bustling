@@ -1,14 +1,12 @@
 import React from 'react'
-import LoginRigester from '../Component/LoginRegister'
-
-export default class extends React.Component {
+export default class Manage extends React.Component{
     constructor(props){
         super(props);
     }
     render() {
         return(
             <div>
-                <LoginRigester/>
+                we are manage
             </div>
         )
     }
