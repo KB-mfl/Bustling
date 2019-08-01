@@ -46,6 +46,15 @@ class Register extends Controller {
             'email' => 'required',
             'code' => 'required'
         ]);
+
+        $user = User::query()->where('email', $request->input('email'))->first();
+        if($user) {
+            return parent::error(401, '该邮箱已被注册哦');
+        }
+        $user = User::query()->where('username', $request->input('username'))->first();
+        if($user) {
+            return parent::error(401, '该用户名已被注册哦');
+        }
         $user = new User();
 
         /**

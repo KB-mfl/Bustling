@@ -1,0 +1,2 @@
+- cp .env.example .env 并填相应配置
+- 将public/storage 与 storage/app/public建立软链接
