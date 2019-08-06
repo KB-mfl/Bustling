@@ -21,9 +21,11 @@ use Illuminate\Support\Facades\Mail;
  * @apiPermission Login
  * @apiParam {string} email 邮箱
  * @apiParam {string} password 新密码
+ * @apiParam {string} code 验证码
  * @apiParamExample {json} Request-Example:
  * {
  *      'email': 'haha@example.com',
+ *      'code': '123456'
  *      'password': 'd033e22ae348aeb5660fc2140aec35850c4da997'
  * }
  *
