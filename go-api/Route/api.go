@@ -9,6 +9,8 @@ import (
 )
 
 func AddApiRoute() {
+	//Http.Router.Use(Middleware.AuthServiceProvider())
+
 	Http.Router.GET("/", func(c *gin.Context) {
 		c.JSON(200 ,gin.H{
 			"version": "v1.0",
@@ -32,15 +34,15 @@ func AddApiRoute() {
 			Auth.Forgot(c)
 		})
 	}
-	file := Http.Router.Group("")
+	file := Http.Router.Group("/upload")
 	{
-		file.POST("/upload", func(c *gin.Context) {
+		file.POST("/", func(c *gin.Context) {
 			File.Upload(c)
 		})
 	}
 	user := Http.Router.Group("/user")
 	{
-		user.PUT("/profile", func(c *gin.Context) {
+		user.PUT("profile", func(c *gin.Context) {
 			User.Change(c)
 		})
 		user.PUT("security", func(c *gin.Context) {

@@ -18,6 +18,8 @@ func InitOrm()  {
 		panic(fmt.Errorf("Fatal error open database error [err=%s]\n", err))
 	}
 	db = dbEngine
+	db.LogMode(true) //开启日志
+	db.SingularTable(true) //禁止表名复数
 }
 
 func GetDB() *gorm.DB {
