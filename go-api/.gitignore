@@ -1,2 +1,4 @@
 /Public/apidoc
 env.toml
+apidoc.json
+/log/
