@@ -5,11 +5,12 @@ import (
 	"Bustling/go-api/Controller/Auth"
 	"Bustling/go-api/Controller/File"
 	"Bustling/go-api/Controller/User"
+	"Bustling/go-api/Middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func AddApiRoute() {
-	//Http.Router.Use(Middleware.AuthServiceProvider())
+	Http.Router.Use(Middleware.AuthServiceProvider())
 
 	Http.Router.GET("/", func(c *gin.Context) {
 		c.JSON(200 ,gin.H{
@@ -18,35 +19,24 @@ func AddApiRoute() {
 	})
 	auth := Http.Router.Group("/auth")
 	{
-		auth.POST("register", func(c *gin.Context) {
-			Auth.Register(c)
-		})
-		auth.POST("login", func(c *gin.Context) {
-			Auth.Login(c)
-		})
-		auth.POST("code", func(c *gin.Context) {
-			Auth.GetCode(c)
-		})
-		auth.GET("auth", func(c *gin.Context) {
-			Auth.GetAuth(c)
-		})
-		auth.PUT("forgot", func(c *gin.Context) {
-			Auth.Forgot(c)
-		})
+		auth.POST("register", Auth.Register)
+
+		auth.POST("login", Auth.Login)
+
+		auth.POST("code", Auth.GetCode)
+
+		auth.GET("auth", Auth.GetAuth)
+
+		auth.PUT("forgot", Auth.Forgot)
 	}
 	file := Http.Router.Group("/upload")
 	{
-		file.POST("/", func(c *gin.Context) {
-			File.Upload(c)
-		})
+		file.POST("/", File.Upload)
 	}
 	user := Http.Router.Group("/user")
 	{
-		user.PUT("profile", func(c *gin.Context) {
-			User.Change(c)
-		})
-		user.PUT("security", func(c *gin.Context) {
-			User.ResetPassword(c)
-		})
+		user.PUT("profile", User.Change)
+
+		user.PUT("security", User.ResetPassword)
 	}
 }

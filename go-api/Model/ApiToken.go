@@ -8,12 +8,16 @@ import (
 type ApiToken struct {
 	gorm.Model
 
-	ID         int        `gorm:"auto_increment"`
 	UserId     string
 	Token      string     `gorm:"unique"`
 	ExpiredAt  time.Time
+
 }
 
-func main() {
+func (*ApiToken) TableName() string {
+	return "api_token"
+}
 
+func apiToken()  {
+	
 }

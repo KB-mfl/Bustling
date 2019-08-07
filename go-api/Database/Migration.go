@@ -8,9 +8,9 @@ import (
 
 func Migration() {
 	db := Orm.GetDB()
-	err := db.HasTable("test")
+	err := db.HasTable("example")
 	if  !err {
-		db.CreateTable(&Model.Test{})
+		db.CreateTable(&Model.Example{})
 	} else  {
 		fmt.Println("it is existed")
 	}

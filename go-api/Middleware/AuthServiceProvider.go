@@ -14,15 +14,27 @@ func AuthServiceProvider() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := Orm.GetDB()
 		token := c.Request.Header.Get("Api_Token")
-		if apiToken := db.Where("id = ?", token).First(&ApiToken); apiToken != nil {
-			if apiToken.expired_at.Before(time.Now()) {
+		if apiToken := db.Where("id = ?", token).Last(&ApiToken); apiToken.Error != nil {
+			if apiToken.RowsAffected == 0 {
 				c.Set("user", nil)
+			} else {
+				if ApiToken.ExpiredAt.Before(time.Now()) {
+					c.Set("user", nil)
+				}
+				user := db.Where("id = ?", ApiToken.UserId).First(&User)
+				if user.Error != nil {
+					panic(user.Error)
+				} else {
+					c.Set("user", User)
+					duration, _ := time.ParseDuration("30m")
+					newTIme := ApiToken.ExpiredAt.Add(duration)
+					db.Model(&ApiToken).Update("expired_at", newTIme)
+				}
+
 			}
-			user := db.Where("id = ?", apiToken.user_id).First(&User)
-			c.Set("user", user)
-			apiToken.expired_at
 		} else {
-			c.Set("user", nil)
+			panic(apiToken.Error)
 		}
+		c.Next()
 	}
 }
