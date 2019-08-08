@@ -8,8 +8,8 @@ import (
 type ApiToken struct {
 	gorm.Model
 
-	UserId     string
-	Token      string     `gorm:"unique"`
+	UserId     string	  `gorm:"not null"`
+	Token      string     `gorm:"unique;not null"`
 	ExpiredAt  time.Time
 
 }

@@ -5,7 +5,7 @@ TABLE: *user*
 | string | id |          |         | &radic; | short_uuid | &radic; |
 | string | username |    |         | &radic; | nick name |      |
 | string | password |    |         |        |         |         |
-| boolean | gender |     | 0       |        |         |         |
+| boolean | gender |     | 0       |        | 0为女    |         |
 | string | role_id |     | 1       |        | 用户类型 |         |
 | string | avatar | &radic; |      |        | 头像     |        |
 | string | email |       |         | &radic; |        |         |

@@ -1,22 +1,23 @@
 package Model
 
 import (
-	"Bustling/go-api/Boot/Orm"
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
+	"time"
 )
 
 type User struct {
-	gorm.Model
-	
 	ID             string     `gorm:"primary_key;unique"`
-	RoleId         int        `gorm:"default:1"`
-	Username       string     `gorm:"unique"`
-	Email          string     `gorm:"unique"`
+	RoleId         int        `gorm:"default:1;not null"`
+	Username       string     `gorm:"unique;not null"`
+	Email          string     `gorm:"unique;not null"`
 	Avatar         string
-	Password       string
+	Password       string	  `gorm:"not null"`
 	Introduction   string	  `gorm:"type:text"`
-	Gender         int        `gorm:"default:0"`
+	Gender         int        `gorm:"default:0;not null"`
+	CreateAt       time.Time
+	UpdateAt       time.Time
+	DeleteAt       *time.Time
 
 	ApiToken 	   []ApiToken `gorm:"foreignKey:UserId;association_foreignKey:ID"`
 	Role           Role		  `gorm:"foreignKey:UserId;association_foreignKey:ID"`
@@ -25,9 +26,4 @@ type User struct {
 func (*User) BeforeCreate(scope *gorm.Scope) (err error) {
 	err = scope.SetColumn("ID", interface{}(uuid.NewV4()))
 	return
-}
-
-func user()  {
-	db := Orm.GetDB()
-
 }

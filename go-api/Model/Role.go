@@ -5,20 +5,19 @@ import (
 )
 
 type Role struct {
-	ID    int 	  `gorm:"primary_key"`
-	Alias string  `gorm:"unique"`
-	Name  string  `gorm:"unique"`
+	ID    int 	  `gorm:"primary_key;unique"`
+	Alias string  `gorm:"unique;not null"`
+	Name  string  `gorm:"unique;not null"`
 
 	User  []User
 }
 
-func role()  {
+func (*Role) TableName() string {
+	return "role"
+}
+
+func (*Role)AfterCreate()  {
 	db := Orm.GetDB()
 	db.Create(&Role{ID: 0, Alias:"admin", Name:"管理员"})
 	db.Create(&Role{ID: 1, Alias:"user", Name:"用户"})
-	var (
-		users []User
-		role  Role
-	)
-	db.Model(&role).Related(&users)
 }

@@ -4,16 +4,21 @@ import "github.com/jinzhu/gorm"
 // 此文件为Model样例文件
 type Example struct {
 	gorm.Model
-	Test string
+	Test int `gorm:"unique;default:1"`
 }
 
 // 定义表名
-func (Example) TableName() string {
+func (example *Example) TableName() string {
 	return "example"
 }
 
 // 在创建模型前的钩子
-func (*Example) BeforeCreate(scope *gorm.Scope) error {
+func (example *Example) BeforeCreate(scope *gorm.Scope) error {
 	// do something
+	return nil
+}
+
+func (example *Example) AfterCreate(scope gorm.Scope) error {
+	//do something
 	return nil
 }
