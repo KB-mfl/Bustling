@@ -1,6 +1,8 @@
 package Auth
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 /**
  * @api {POST} auth/login 登陆-Login
@@ -29,5 +31,8 @@ import "github.com/gin-gonic/gin"
  */
 
 func Login(c *gin.Context)  {
+	//username := c.PostForm("username")
+	//password := c.PostForm("password")
+	//remember := c.PostForm("remember")
 
 }

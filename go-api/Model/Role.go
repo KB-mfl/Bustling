@@ -9,7 +9,7 @@ type Role struct {
 	Alias string  `gorm:"unique;not null"`
 	Name  string  `gorm:"unique;not null"`
 
-	User  []User
+	User  []User  `gorm:"foreignKey:RoleId;association_foreignKey:ID"`
 }
 
 func (*Role) TableName() string {
