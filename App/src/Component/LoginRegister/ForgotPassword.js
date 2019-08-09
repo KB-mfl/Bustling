@@ -1,43 +1,38 @@
 import React from 'react'
 import httpService from '../../service'
-import { message, Row,Col } from 'antd'
+import {Form, Icon, Input, Button, message, Row, Col} from 'antd';
 import CryptoJS from 'crypto-js';
-import { Form, Input, Button } from 'antd';
-import store from 'store'
 const FormItem = Form.Item;
-class register extends React.Component {
-    constructor(props) {
+class ForgotPassword extends React.Component{
+    constructor(props){
         super(props);
-        this.state = {
-            confirmDirty: false,
-            usernameValidate: '',
+        this.state={
             emailValidate: '',
             submiting: false,
+            confirmDirty: false,
             pendingTime:0,
             email:''
-        };
+        }
+
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.form.validateFields((errors, values) => {
-            console.log(errors);
-            if (!errors) {
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
                 this.setState({submiting: true});
-                httpService.post('auth/register', {
-                    username: values.username,
-                    password: CryptoJS.SHA1(values.password).toString(),
+                console.log(123);
+                httpService.put('auth/forgot', {
                     email: values.email,
-                    code:values.code
+                    password: CryptoJS.SHA1(values.password).toString(),
+                    code:values.code,
                 }).then(r => {
-                    message.success('注册成功，请登录', 1).then(() => {
-                        this.setState({submiting: false});
-                        store.set(('token'),{
-                            Api_Token:r.data.token,
-                        });
-                        window.location.reload();
-                    })
+                    message.success('修改成功', 3);
+                    this.setState({submiting: false});
+                    setTimeout(()=>{window.location.reload()},3000);
                 }).catch(e => {
+                    message.error('修改失败');
+                    console.log(e);
                     this.setState({submiting: false})
                 })
             } else {
@@ -45,51 +40,6 @@ class register extends React.Component {
             }
         });
     }
-
-    compareToFirstPassword = (rule, value, callback) => {
-        console.log('1');
-        const form = this.props.form;
-        if (value && value !== form.getFieldValue('password')) {
-            callback('两次密码不一致');
-        } else {
-            callback();
-        }
-    };
-
-    validateToNextPassword = (rule, value, callback) => {
-        console.log('2');
-        const form = this.props.form;
-        if (value && this.state.confirmDirty) {
-            form.validateFields(['confirm'], { force: true });
-        }
-        callback();
-    };
-
-    handleConfirmBlur = (e) => {
-        console.log('3');
-        const value = e.target.value;
-        this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-    };
-
-    usernameValidating = (rule, value, callback) => {
-        const form = this.props.form;
-        this.setState({usernameValidate: 'validating'});
-        let username = form.getFieldsValue(['username']).username;
-        if (!username) {
-            this.setState({usernameValidate: 'error'});
-            callback('请输入用户名');
-            return;
-        }
-        let Reg = /^([a-zA-Z][a-zA-Z0-9_]{0,9})$|^([\u4e00-\u9fa5]{1,10})$/;
-        console.log(Reg.test(username));
-        if (!Reg.test(username)) {
-            this.setState({usernameValidate: 'error'});
-            callback('请检查用户名(以英文字母或中文字符开头，不超过10个字符)');
-            return;
-        }
-        this.setState({usernameValidate: 'success'});
-        callback();
-    };
 
     emailValidating = (rule, value, callback) => {
         const form = this.props.form;
@@ -133,32 +83,42 @@ class register extends React.Component {
         if (sending < 0) {
             return;
         }
-        this.setState({ sending });
+        this.setState({sending});
         if (sending > 0) {
             setTimeout(this.penderTime.bind(this), 1000);
         }
     }
 
+    compareToFirstPassword = (rule, value, callback) => {
+        console.log('1');
+        const form = this.props.form;
+        if (value && value !== form.getFieldValue('password')) {
+            callback('两次密码不一致');
+        } else {
+            callback();
+        }
+    };
+
+    validateToNextPassword = (rule, value, callback) => {
+        console.log('2');
+        const form = this.props.form;
+        if (value && this.state.confirmDirty) {
+            form.validateFields(['confirm'], { force: true });
+        }
+        callback();
+    };
+
+    handleConfirmBlur = (e) => {
+        console.log('3');
+        const value = e.target.value;
+        this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+    };
+
 
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} layout="vertical">
-                <FormItem
-                    label="用户名"
-                    validateStatus = {this.state.usernameValidate}
-                    hasFeedback
-                >
-                    {getFieldDecorator('username', {
-                        rules: [{
-                            required: true, message: ' ',
-                        }, {
-                            validator: this.usernameValidating
-                        }],
-                    })(
-                        <Input />
-                    )}
-                </FormItem>
+            <Form layout="vertical" style={{maxWidth:'300px',marginLeft:'9%'}}>
                 <FormItem
                     label="邮箱"
                     validateStatus = {this.state.emailValidate}
@@ -214,12 +174,11 @@ class register extends React.Component {
                     )}
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" htmlType="submit" style={{width: '100%'}} loading={this.state.submiting}>注册</Button>
+                    <Button type="primary" htmlType="submit" style={{width: '100%'}} loading={this.state.submiting} onClick={this.handleSubmit}>确认</Button>
                 </FormItem>
             </Form>
         )
     }
 }
-const WrappedRegistrationForm = Form.create()(register);
-
+const WrappedRegistrationForm = Form.create()(ForgotPassword);
 export default WrappedRegistrationForm
