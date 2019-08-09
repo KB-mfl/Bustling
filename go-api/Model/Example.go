@@ -17,8 +17,3 @@ func (example *Example) BeforeCreate(scope *gorm.Scope) error {
 	// do something
 	return nil
 }
-
-func (example *Example) AfterCreate(scope gorm.Scope) error {
-	//do something
-	return nil
-}
