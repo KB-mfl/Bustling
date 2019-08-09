@@ -1,6 +1,11 @@
 package Auth
 
-import "github.com/gin-gonic/gin"
+import (
+	"Bustling/go-api/Boot/Orm"
+	"Bustling/go-api/Model"
+	"github.com/gin-gonic/gin"
+	"time"
+)
 
 /**
  * @api {POST} auth/code 获取验证码-GetCode
@@ -20,5 +25,21 @@ import "github.com/gin-gonic/gin"
  */
 
 func GetCode(c *gin.Context)  {
+	email := c.DefaultPostForm("email", "1716175849@qq.com")
+	if email == "" {
+		c.JSON(422, gin.H{"message":"邮箱是必须的"})
+		return
+	}
+	db := Orm.GetDB()
+	var pre Model.Code
+	if !db.Where("email=?", email).Last(&pre).RecordNotFound() {
+		if !pre.ExpiredAt.Before(time.Now()) {
+			c.JSON(403, gin.H{"message":"请不要频繁发送信息哦"})
+			return
+		}
+	}
 
+	var code = Model.Code{Email:email}
+	db.Create(&code)
+	code.SendMsg(email)
 }

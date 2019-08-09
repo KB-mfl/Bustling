@@ -1,6 +1,9 @@
 package Auth
 
 import (
+	"Bustling/go-api/Boot/Orm"
+	"Bustling/go-api/Controller"
+	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,9 +33,34 @@ import (
  * }
  */
 
-func Login(c *gin.Context)  {
-	//username := c.PostForm("username")
-	//password := c.PostForm("password")
-	//remember := c.PostForm("remember")
+type LoginValidate struct {
+	Username   string  `json:"username" binding:"required"`
+	Remember   bool    `json:"remember"`
+	Password   string  `json:"password" binding:"required, len=40"`
+}
 
+func Login(c *gin.Context) {
+	var data LoginValidate
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(422, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	var user Model.User
+	db := Orm.GetDB()
+	if db.Where("username = ?", data.Username).First(&user).RecordNotFound() {
+		c.JSON(401, gin.H{"message": "用户名或密码错误"})
+		return
+	} else {
+		if !Controller.Sha1Check(user.Password, data.Password) {
+			c.JSON(401, gin.H{"message": "用户名或密码错误"})
+			return
+		} else {
+			var apiToken = Model.ApiToken{UserId: user.ID}
+			apiToken.AddTime(data.Remember)
+			db.Create(&apiToken)
+			c.JSON(200, gin.H{"token": apiToken.Token})
+		}
+	}
 }
