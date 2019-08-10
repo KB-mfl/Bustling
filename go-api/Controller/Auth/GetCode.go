@@ -45,5 +45,6 @@ func GetCode(c *gin.Context)  {
 
 	var code = Model.Code{Email: data.Email}
 	db.Create(&code)
-	code.SendMsg(data.Email)
+	message := "你的验证码为 "+code.Code+" 有效期为3分钟。"
+	code.SendMsg(data.Email, message)
 }

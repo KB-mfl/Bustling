@@ -33,12 +33,12 @@ func (code *Code) BeforeCreate(scope *gorm.Scope) error {
 	return nil
 }
 
-func (code *Code) SendMsg(email string)  {
+func (code *Code) SendMsg(email string, message string)  {
 	username := Config.GetString("email.username")
 	password := Config.GetString("email.password")
 	host := Config.GetString("email.host")
 	auth := smtp.PlainAuth("", username, password, host)
-	msg := []byte("To: "+email+"\r\nFrom:"+username+"\r\nSubject: 奉天承运，皇帝诏曰：\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n你的验证码为 "+code.Code+" 有效期为3分钟。钦此！！！\r\n还不快快接旨！")
+	msg := []byte("To: "+email+"\r\nFrom:"+username+"\r\nSubject: 奉天承运，皇帝诏曰：\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n"+message+"钦此！！！\r\n还不快快接旨！")
 	port := Config.GetString("email.port")
 	err := smtp.SendMail(host+":"+port, auth, username, []string{email}, msg)
 	if err != nil {
