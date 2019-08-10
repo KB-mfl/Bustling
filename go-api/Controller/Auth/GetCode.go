@@ -24,22 +24,26 @@ import (
  * }
  */
 
+type GetCodeValidate struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
 func GetCode(c *gin.Context)  {
-	email := c.DefaultPostForm("email", "1716175849@qq.com")
-	if email == "" {
-		c.JSON(422, gin.H{"message":"邮箱是必须的"})
+	var data GetCodeValidate
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(422, gin.H{"message": err.Error()})
 		return
 	}
 	db := Orm.GetDB()
 	var pre Model.Code
-	if !db.Where("email=?", email).Last(&pre).RecordNotFound() {
+	if !db.Where("email=?", data.Email).Last(&pre).RecordNotFound() {
 		if !pre.ExpiredAt.Before(time.Now()) {
 			c.JSON(403, gin.H{"message":"请不要频繁发送信息哦"})
 			return
 		}
 	}
 
-	var code = Model.Code{Email:email}
+	var code = Model.Code{Email: data.Email}
 	db.Create(&code)
-	code.SendMsg(email)
+	code.SendMsg(data.Email)
 }

@@ -23,7 +23,9 @@ type User struct {
 	Role           Role		  `gorm:"foreignKey:UserId;association_foreignKey:ID"`
 }
 
-func (*User) BeforeCreate(scope *gorm.Scope) (err error) {
+func (user *User) BeforeCreate(scope *gorm.Scope) (err error) {
 	err = scope.SetColumn("ID", interface{}(uuid.NewV4()))
+	err = scope.SetColumn("CreateAt", time.Now())
+	err = scope.SetColumn("UpdateAt", time.Now())
 	return
 }

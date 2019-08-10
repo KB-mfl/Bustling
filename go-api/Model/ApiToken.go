@@ -21,8 +21,7 @@ func (apiToken ApiToken) TableName() string {
 }
 
 func (apiToken *ApiToken) BeforeCreate(scope *gorm.Scope) error {
-	token, _ := uuid.NewV4()
-	_ := scope.SetColumn("Token", token)
+	_ = scope.SetColumn("Token", interface{}(uuid.NewV4()))
 	return nil
 }
 

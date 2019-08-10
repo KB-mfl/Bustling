@@ -42,9 +42,7 @@ type LoginValidate struct {
 func Login(c *gin.Context) {
 	var data LoginValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(422, gin.H{
-			"message": err.Error(),
-		})
+		c.JSON(422, gin.H{"message": err.Error()})
 		return
 	}
 	var user Model.User
@@ -52,15 +50,13 @@ func Login(c *gin.Context) {
 	if db.Where("username = ?", data.Username).First(&user).RecordNotFound() {
 		c.JSON(401, gin.H{"message": "用户名或密码错误"})
 		return
-	} else {
-		if !Controller.Sha1Check(user.Password, data.Password) {
-			c.JSON(401, gin.H{"message": "用户名或密码错误"})
-			return
-		} else {
-			var apiToken = Model.ApiToken{UserId: user.ID}
-			apiToken.AddTime(data.Remember)
-			db.Create(&apiToken)
-			c.JSON(200, gin.H{"token": apiToken.Token})
-		}
 	}
+	if !Controller.Sha1Check(user.Password, data.Password) {
+		c.JSON(401, gin.H{"message": "用户名或密码错误"})
+		return
+	}
+	var apiToken = Model.ApiToken{UserId: user.ID}
+	apiToken.AddTime(data.Remember)
+	db.Create(&apiToken)
+	c.JSON(200, gin.H{"token": apiToken.Token})
 }
