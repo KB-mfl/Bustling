@@ -36,13 +36,13 @@ import (
 type LoginValidate struct {
 	Username   string  `json:"username" binding:"required"`
 	Remember   bool    `json:"remember"`
-	Password   string  `json:"password" binding:"required, len=40"`
+	Password   string  `json:"password" binding:"required,len=40"`
 }
 
 func Login(c *gin.Context) {
 	var data LoginValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(422, gin.H{"message": err.Error()})
+		c.JSON(422, gin.H{"message": err.Error() + "asd"})
 		return
 	}
 	var user Model.User
@@ -51,7 +51,7 @@ func Login(c *gin.Context) {
 		c.JSON(401, gin.H{"message": "用户名或密码错误"})
 		return
 	}
-	if !Controller.Sha1Check(user.Password, data.Password) {
+	if !Controller.Sha256Check(user.Password, data.Password) {
 		c.JSON(401, gin.H{"message": "用户名或密码错误"})
 		return
 	}
