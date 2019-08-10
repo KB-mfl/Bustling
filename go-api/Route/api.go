@@ -6,12 +6,16 @@ import (
 	"Bustling/go-api/Controller/File"
 	"Bustling/go-api/Controller/User"
 	"Bustling/go-api/Middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func AddApiRoute() {
 	Http.Router.Use(Middleware.AuthServiceProvider())
-
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Api_Token"}
+	Http.Router.Use(cors.New(config))
 	Http.Router.GET("/", func(c *gin.Context) {
 		c.JSON(200 ,gin.H{
 			"version": "v1.0",
