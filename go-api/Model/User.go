@@ -3,6 +3,7 @@ package Model
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
+	"strconv"
 	"time"
 )
 
@@ -28,4 +29,20 @@ func (user *User) BeforeCreate(scope *gorm.Scope) (err error) {
 	err = scope.SetColumn("CreateAt", time.Now())
 	err = scope.SetColumn("UpdateAt", time.Now())
 	return
+}
+
+func (user *User) GetData(kind string) map[string]string {
+	switch kind {
+	case "detail":
+		return map[string]string{
+			"username": user.Username,
+			"avatar": user.Avatar,
+			"email": user.Email,
+			"gender": strconv.Itoa(user.Gender),
+			"role": strconv.Itoa(user.RoleId),
+			"introduction": user.Introduction,
+		}
+	default:
+		return make(map[string]string)
+	}
 }

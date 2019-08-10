@@ -1,12 +1,16 @@
 package Auth
 
-import "github.com/gin-gonic/gin"
+import (
+	"Bustling/go-api/Boot/Orm"
+	"Bustling/go-api/Model"
+	"github.com/gin-gonic/gin"
+)
 
 /**
  * @api {GET} auth/auth 获取用户信息-GetAuth
  * @apiGroup Auth
  * @apiName GetAuth
- * @apiPermission Login
+ * @apiPermission ALl
  * @apiSuccess {string} username 用户名
  * @apiSuccess {string} avatar 头像
  * @apiSuccess {string} email 邮箱
@@ -29,5 +33,16 @@ import "github.com/gin-gonic/gin"
  */
 
 func GetAuth(c *gin.Context)  {
-
+	userEmail, _ := c.Get("user")
+	if userEmail == nil {
+		c.JSON(404, gin.H{"message":"请先登陆哦"})
+		return
+	}
+	db := Orm.GetDB()
+	var user Model.User
+	if db.Where("email=?", userEmail).First(&user).RecordNotFound() {
+		c.JSON(404, gin.H{"message":"该用户找不到了哦"})
+		return
+	}
+	c.JSON(200, gin.H{"data": user.GetData("detail")})
 }
