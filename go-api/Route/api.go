@@ -14,7 +14,7 @@ func AddApiRoute() {
 	Http.Router.Use(Middleware.AuthServiceProvider())
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
-	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Api_Token"}
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Api_Token", "x-requested-with"}
 	Http.Router.Use(cors.New(config))
 	Http.Router.GET("/", func(c *gin.Context) {
 		c.JSON(200 ,gin.H{
@@ -33,9 +33,9 @@ func AddApiRoute() {
 
 		auth.PUT("forgot", Auth.Forgot)
 	}
-	file := Http.Router.Group("/upload")
+	file := Http.Router.Group("/")
 	{
-		file.POST("/", File.Upload)
+		file.POST("/upload", File.Upload)
 	}
 	user := Http.Router.Group("/user")
 	{

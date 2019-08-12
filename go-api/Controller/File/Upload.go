@@ -1,6 +1,12 @@
 package File
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
+	"io"
+	"os"
+	"strings"
+)
 
 /**
  * @api {POST} /upload 上传文件-File
@@ -16,5 +22,27 @@ import "github.com/gin-gonic/gin"
  */
 
 func Upload(c *gin.Context)  {
-
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		panic(err)
+	}
+	mimeType := strings.Split(header.Filename, ".")[1]
+	filename := uuid.NewV4().String()
+	out, err := os.Create("public/"+filename+"."+mimeType)
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		err := out.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+	_, err = io.Copy(out, file)
+	if err != nil {
+		panic(err)
+	}
+	c.JSON(200, gin.H{
+		"filename": filename+"."+mimeType,
+	})
 }
