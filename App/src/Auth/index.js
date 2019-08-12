@@ -3,6 +3,7 @@ import { Menu } from 'antd';
 import './index.less'
 import Login from '../Component/LoginRegister/Login'
 import Register from '../Component/LoginRegister/Register'
+import ForgotPassword from '../Component/LoginRegister/ForgotPassword'
 import { Route, Switch, Redirect,BrowserRouter } from "react-router-dom";
 
 class Layout extends React.Component {
@@ -14,14 +15,8 @@ class Layout extends React.Component {
     }
 
     componentDidMount() {
-        // let promise = new Promise((resolve,reject)=>{
-        //     console.log(312);
-        //     resolve();
-        // });
-        // promise.then(()=>{
-        //     console.log(112233);
-        // })
-        // console.log(2233)
+
+
     }
 
     handleClick = (e) => {
@@ -30,7 +25,7 @@ class Layout extends React.Component {
         },function () {
             window.location.href=`/${this.state.current}`
         });
-        
+
 
         // let promise = new Promise(resolve => {
         //     this.setState({
@@ -64,6 +59,7 @@ class Layout extends React.Component {
                             <Route exact path='/' component={()=><Redirect to={this.state.current}/>}/>
                             <Route path='/login' component={Login}/>
                             <Route path='/register' component={Register}/>
+                            <Route path='/forgot' component={ForgotPassword}/>
                         </Switch>
                     </div>
                 </div>

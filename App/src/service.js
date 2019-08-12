@@ -11,6 +11,7 @@ axios.interceptors.request.use(config => {
     }
     return config;
 }, error => {
+    console.log(error);
     return Promise.reject(error);
 });
 axios.interceptors.response.use(response=> {
@@ -23,6 +24,7 @@ axios.interceptors.response.use(response=> {
     let errorMessage ;
     let logoutMessage;
     const auth = window.location.pathname.split('/')[1];
+    console.log(window.location.pathname);
     if (status===401){
         if (auth===('user' ||'admin')){
             errorMessage = error.response.data.message || '身份信息过期或者未登录，请登录';
@@ -33,6 +35,9 @@ axios.interceptors.response.use(response=> {
         else if (auth==='register'){
             logoutMessage = error.response.data.message ||'欢迎注册'
         }
+    }
+    else if(status===422){
+        errorMessage = error.response.data.message || '请重新填写表单';
     }else {
         errorMessage = error.response.data.message || '暂时未定义错误';
     }

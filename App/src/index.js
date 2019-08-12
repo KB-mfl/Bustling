@@ -6,6 +6,7 @@ import Layout from './Auth/index'
 import Index from './Index/index'
 import preprocess from './preprocess'
 import { Spin } from 'antd'
+import store from "store";
 
 ReactDOM.render((
     <Spin size="large">
@@ -16,16 +17,17 @@ ReactDOM.render((
 const LoginUser = ['admin', 'user', 'tourist'];
 
 preprocess().then(() => {
-    console.log(22);
     ReactDOM.render(<App/>, document.getElementById('root'));
 }).catch(() => {
     const url =window.location.pathname.split('/')[1].toString();
-    if (url ==='login'|| 'register'){
+    console.log(window.location.pathname);
+    if(url ==='login'|| url=== 'register'){
         ReactDOM.render(<Layout/>, document.getElementById('root'));
+    }
+    else if(store.get('token').Api_Token!==null){
+        ReactDOM.render(<Index/>, document.getElementById('root'));
     }
     else if(url === 'forgot'){
         ReactDOM.render(<Layout/>, document.getElementById('root'));
-    } else {
-        ReactDOM.render(<Index/>, document.getElementById('root'));
     }
 });

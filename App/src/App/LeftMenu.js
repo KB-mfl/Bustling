@@ -1,6 +1,6 @@
 import React from 'react'
 import { Menu, Icon, Layout} from 'antd'
-import { withRouter} from 'react-router-dom'
+import { withRouter, Link} from 'react-router-dom'
 import store from 'store'
 
 class LeftMenu extends React.Component{
