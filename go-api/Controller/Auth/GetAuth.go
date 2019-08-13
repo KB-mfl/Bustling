@@ -40,9 +40,9 @@ func GetAuth(c *gin.Context)  {
 	}
 	db := Orm.GetDB()
 	var user Model.User
-	if db.Where("email=?", userEmail).First(&user).RecordNotFound() {
+	if db.Table("user").Where("email=?", userEmail).First(&user).RecordNotFound() {
 		c.JSON(404, gin.H{"message":"该用户找不到了哦"})
 		return
 	}
-	c.JSON(200, gin.H{"data": user.GetData("detail")})
+	c.JSON(200, user.GetData("detail"))
 }
