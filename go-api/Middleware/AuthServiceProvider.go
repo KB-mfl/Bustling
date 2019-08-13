@@ -7,22 +7,21 @@ import (
 	"time"
 )
 
-var apiToken Model.ApiToken
-var user Model.User
-
 func AuthServiceProvider() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := Orm.GetDB()
 		token := c.Request.Header.Get("Api_Token")
-		if !db.Where("token = ?", token).Last(&apiToken).RecordNotFound() {
+		var apiToken Model.ApiToken
+		if !db.Where("token=?", token).First(&apiToken).RecordNotFound() {
 			if apiToken.ExpiredAt.Before(time.Now()) {
 				c.Set("user", nil)
 			} else {
-				db.Model(&apiToken).Association("User").Find(&user)
+				db := Orm.GetDB()
+				var user Model.User
+				db.Model(&apiToken).Related(&user)
 				c.Set("user", user.Email)
 				duration, _ := time.ParseDuration("30m")
-				newTime := apiToken.ExpiredAt.Add(duration)
-				db.Model(&apiToken).Update("expired_at", newTime)
+				db.Model(&apiToken).Update("expired_at", apiToken.ExpiredAt.Add(duration))
 			}
 		} else {
 			c.Set("user", nil)

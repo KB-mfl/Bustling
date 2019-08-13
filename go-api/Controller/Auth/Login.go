@@ -42,7 +42,7 @@ type LoginValidate struct {
 func Login(c *gin.Context) {
 	var data LoginValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(422, gin.H{"message": err.Error() + "asd"})
+		c.JSON(422, gin.H{"message": "格式不正确哦"})
 		return
 	}
 	var user Model.User
