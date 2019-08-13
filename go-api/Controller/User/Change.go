@@ -1,6 +1,11 @@
 package User
 
-import "github.com/gin-gonic/gin"
+import (
+	"Bustling/go-api/Boot/Orm"
+	"Bustling/go-api/Model"
+	"fmt"
+	"github.com/gin-gonic/gin"
+)
 
 /**
  * @api {PUT} user/profile 修改简介-Change
@@ -20,6 +25,51 @@ import "github.com/gin-gonic/gin"
  * }
  */
 
-func Change(c *gin.Context)  {
+type ChangeValidate struct {
+	Username 	 string `json:"username"`
+	Avatar   	 string `json:"avatar"`
+	Introduction string `json:"introduction"`
+	Gender       int    `json:"gender"`
+}
 
+func Change(c *gin.Context)  {
+	userEmail, _ := c.Get("user")
+	db := Orm.GetDB()
+	var user Model.User
+	if db.Where("email=?", userEmail).First(&user).RecordNotFound() {
+		c.AbortWithStatus(401)
+	}
+	var data ChangeValidate
+	if err := c.ShouldBindJSON(&data); err != nil {
+		panic(err)
+	}
+	var username, avatar, introduction string
+	var gender int
+	if data.Username != "" {
+		username = data.Username
+	} else {
+		username = user.Username
+	}
+	if data.Avatar != "" {
+		avatar = data.Avatar
+	} else {
+		avatar = user.Avatar
+	}
+	if data.Introduction != "" {
+		introduction = data.Introduction
+	} else {
+		introduction = user.Introduction
+	}
+	fmt.Println(data.Gender)
+	if data.Gender != 0 {
+		gender = data.Gender
+	} else {
+		gender = user.Gender
+	}
+	db.Model(&user).Updates(Model.User{
+		Username: username,
+		Avatar: avatar,
+		Introduction: introduction,
+		Gender: gender,
+	})
 }
