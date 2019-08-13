@@ -1,6 +1,11 @@
 package User
 
-import "github.com/gin-gonic/gin"
+import (
+	"Bustling/go-api/Boot/Orm"
+	"Bustling/go-api/Controller"
+	"Bustling/go-api/Model"
+	"github.com/gin-gonic/gin"
+)
 
 /**
  * @api {PUT} user/security 修改密码-ResetPassword
@@ -16,6 +21,27 @@ import "github.com/gin-gonic/gin"
  * }
  */
 
-func ResetPassword(c *gin.Context)  {
+type ResetPasswordValidate struct {
+	PasswordOld string `json:"password_old" binding:"required,len=40"`
+	PasswordNew string `json:"password_new" binding:"required,len=40"`
+}
 
+func ResetPassword(c *gin.Context)  {
+	userEmail, _ := c.Get("user")
+	if userEmail == nil {
+		c.AbortWithStatus(401)
+	}
+	var data ResetPasswordValidate
+	if err :=c.ShouldBindJSON(&data); err != nil {
+		c.JSON(422, gin.H{"message":"格式不正确哦"})
+		return
+	}
+	db := Orm.GetDB()
+	var user Model.User
+	db.Where("email=?", userEmail).First(&user)
+	if !Controller.Sha256Check(user.Password, data.PasswordOld) {
+		c.JSON(403, gin.H{"message":"密码错误"})
+		return
+	}
+	db.Model(&user).UpdateColumn("Password", Controller.Sha256Get(data.PasswordNew))
 }
