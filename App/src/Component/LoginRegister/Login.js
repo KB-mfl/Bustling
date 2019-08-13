@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Icon, Input, Button, Checkbox} from 'antd';
+import { Link } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import {message} from 'antd';
 import httpService from '../../service';
@@ -12,6 +13,7 @@ class login extends React.Component {
             submiting: false
         }
     }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -22,12 +24,16 @@ class login extends React.Component {
                     password: CryptoJS.SHA1(values.password).toString(),
                     remember: true,
                 }).then(r => {
+                    console.log(r.data);
                     message.success('登陆成功', 3);
                     this.setState({submiting: false});
                     store.set(('token'),{
                         Api_Token:r.data.token,
                     });
-                    setTimeout(()=>{window.location.reload()},3000);
+                    httpService.get('/auth/auth').then(r=>{
+                        let alias = r.data.role.alias;
+                        setTimeout(()=>{window.location.href=`/${alias}/homepage`},3000);
+                    })
                 }).catch(e => {
                     message.error('登录失败');
                     console.log(e);
@@ -72,7 +78,7 @@ class login extends React.Component {
                     <a style={{float:"right"}} href="/forgot">
                         Forgot password
                     </a>
-                    <a href="/register">register now!</a>
+                    <Link to="/register">register now!</Link>
                 </Form.Item>
             </Form>
         )

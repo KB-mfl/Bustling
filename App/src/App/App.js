@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Icon, Button} from 'antd';
+import { Layout, Icon, Button,Avatar} from 'antd';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import ProfitRoute from '../Component/Profit/Profit';
 import './App.less';
@@ -25,7 +25,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        console.log(window.role);
+        console.log(window.authInfor);
         // console.log(window.location.pathname);
     }
 
@@ -39,23 +39,21 @@ class App extends Component {
 
     render() {
     return (
-        <Layout style={{minHeight: '100vh'}}>
-            <BrowserRouter>
+        <BrowserRouter>
+            <Layout style={{minHeight: '100vh'}}>
                 <LeftMenu/>
-            </BrowserRouter>
-            <Layout>
-                <Header style={{background: '#bde3ff', padding: 0}}>
-                    <div style={{float:"right",paddingRight:10}}>
-                        {window.role ==='tourist' && <Button
-                        onClick={this.goToLogin}
-                        type="primary"
-                        >
-                            登录
-                        </Button>}
-                        {(window.role==='user'||window.role==='admin')&&<LoginOut/>}
-                    </div>
-                </Header>
-                <BrowserRouter>
+                <Layout>
+                    <Header style={{background: '#bde3ff', padding: 0}}>
+                        <div style={{float:"right",paddingRight:10}}>
+                            {window.role ==='tourist' && <Button
+                                onClick={this.goToLogin}
+                                type="primary"
+                            >
+                                登录
+                            </Button>}
+                            {(window.role==='user'||window.role==='admin') &&<LoginOut/>}
+                        </div>
+                    </Header>
                     <Content style={{margin: '10px 10px', padding: 20, background: '#fff'}}>
                         <Switch>
                             <Route exact path='/' component={()=><Redirect to={window.role}/>}/>
@@ -64,9 +62,9 @@ class App extends Component {
                             <Route exact path="/" component={() =><Redirect to="/HomePage"/>}/>
                         </Switch>
                     </Content>
-                </BrowserRouter>
+                </Layout>
             </Layout>
-        </Layout>
+        </BrowserRouter>
     );
   }
 }

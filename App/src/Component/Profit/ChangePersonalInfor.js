@@ -1,6 +1,6 @@
 import React from 'react'
 import httpService from "../../service";
-import {Form, Button, Input, Message, Radio,Icon} from "antd";
+import {Form, Button, Input, Message, Radio,Icon, Popconfirm} from "antd";
 import UploadImg from './UploadImg'
 const FormItem = Form.Item;
 
@@ -16,7 +16,6 @@ class ChangePersonalInfor extends React.Component{
     }
     componentDidMount() {
         console.log(window.authInfor.avatar);
-        // console.log(this.state.name);
     }
 
     postInfor = (e) =>{
@@ -44,6 +43,8 @@ class ChangePersonalInfor extends React.Component{
     changeImg = (filename) => {
         this.setState({
             avatar:filename,
+        },function () {
+
         })
     }
 
@@ -85,7 +86,6 @@ class ChangePersonalInfor extends React.Component{
                     </FormItem>
                 </Form>
                 <Button style={{float:'right',marginBottom:20}} type="primary" onClick={this.postInfor.bind(this)}>保存</Button>
-
             </div>
         );
     }
