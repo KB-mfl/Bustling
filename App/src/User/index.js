@@ -9,6 +9,7 @@ import NetPartnerMessage from "../Component/Notification/NotificationItem/NetPar
 import SystemMessage from "../Component/Notification/NotificationItem/SystemMessage";
 import ViewProcess from "./Writing/ViewProcess";
 import WritePaper from "./Writing/WritePaper";
+import ArticleLayout from "../Component/Article/Articlelayout";
 
 export default class extends React.Component {
     constructor(props){
@@ -31,8 +32,9 @@ export default class extends React.Component {
                     <Route path='/user/writing/writePapers' component={WritePaper}/>
                     <Route path='/user/writing/viewProcess' component={ViewProcess}/>
                     <Route path='/user/profit' component={Profit}/>
-                    <Route path={`/user/notification/netPartnerMessage/${this.state.pageID}`} component={NetPartnerMessage}/>
+                    <Route path='/user/notification/netPartnerMessage/' component={NetPartnerMessage}/>
                     <Route path='/user/notification/systemMessage' component={SystemMessage}/>
+                    <Route path='/user/article/:articleId' component={ArticleLayout}/>
                 </Switch>
             </div>
         )

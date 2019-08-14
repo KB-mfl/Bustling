@@ -2,6 +2,7 @@ import React from 'react'
 import httpService from '../../service'
 import {Input, Button, message, Card} from "antd";
 import TextEditor from "./TextEditor";
+import store from 'store';
 const {TextArea} = Input;
 export default class WritePaper extends React.Component{
     constructor(props) {
@@ -58,7 +59,7 @@ export default class WritePaper extends React.Component{
         return(
             <div>
                 <Card title='我的写作板'>
-                    <Input placeholder='请输入你的标题' style={{marginBottom:10}} onChange={this.changeTitle}/>
+                    <Input type='text' placeholder='请输入你的标题' onChange={this.changeTitle} style={{marginBottom:10}}/>
                     <Input placeholder='请输入你的副标题' style={{marginBottom:10}} onChange={this.changeSketch}/>
                     <TextEditor changeEditorState={this.changeEditorState}/>
                 </Card>

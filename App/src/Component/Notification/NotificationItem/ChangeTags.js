@@ -1,40 +1,93 @@
-import {Drawer, Button, Icon} from 'antd';
-import {Link} from "react-router-dom";
-import React from "react";
-export default class ChangeTags extends React.Component {
-    state = { visible: false };
+import React from 'react'
+import { List, Avatar ,Pagination,Icon} from 'antd';
+import httpService from '../../../service'
+export default class NetPartnerMessage extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            start:0,
+            end:3,
+            pagination: {
+                current: 0,
+                pageSize: 30,
+                total: 0
+            },
+            data: [{
+                title: 'Ant Design Title 0'
+            },{
+                title: 'Ant Design Title 1',
+            }, {
+                title: 'Ant Design Title 2',
+            }, {
+                title: 'Ant Design Title 3',
+            }, {
+                title: 'Ant Design Title 4',
+            }, {
+                title: 'Ant Design Title 5',
+            }, {
+                title: 'Ant Design Title 6',
+            }, {
+                title: 'Ant Design Title 7',
+            }, {
+                title: 'Ant Design Title 8',
+            },{
+                title: 'Ant Design Title 9',
+            }]
+        }
+    }
 
-    showDrawer = () => {
-        this.setState({
-            visible: true,
-        });
+    componentDidMount() {
+
+    }
+
+    fetchData = () => {
+        // let pagination = this.state.pagination;
+        // const params = {
+        //     offset:(this.state.current-1)*this.state.pageSize,
+        //     limit:pagination.pageSize
+        // };
+        // httpService.get('/').then(r=>{
+        //     this.setState({
+        //         data:r.data
+        //     })
+        // })
+        // const data = totalData.slice(params.offset+1,params.offset+2+params.limit)
     };
 
-    onClose = () => {
+    onChange = (pageNumber,pageSize) => {
+        const pagination = this.state.pagination;
+        pagination.current = pageNumber;
+        pagination.pageSize = pageSize;
         this.setState({
-            visible: false,
-        });
+            pagination,
+        },function () {
+            this.setState({
+                start:(pagination.current-1)*pagination.pageSize,
+                end:(pagination.current-1)*pagination.pageSize+pagination.pageSize,
+            })
+        })
     };
-
     render() {
-        return (
+        const data = this.state.data.slice(this.state.start,this.state.end);
+        return(
             <div>
-                <Button onClick={this.showDrawer}>
-                    Open
-                </Button>
-                <Drawer
-                    title="Basic Drawer"
-                    placement="right"
-                    closable={false}
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                >
-                    <p>
-                        <Button style={{marginRight:10}}><Link to='/user/notification/netPartnerMessage'><Icon type='twitter'/>网友留言</Link></Button>
-                        <Button style={{marginRight:10}}><Link to='/user/notification/systemMessage'><Icon type='sound'/>系统消息</Link></Button>
-                    </p>
-                </Drawer>
+                <List
+                    itemLayout="horizontal"
+                    dataSource={data}
+                    renderItem={item => (
+                        <List.Item>
+                            <List.Item.Meta
+                                avatar={<Avatar src="http://localhost:8000/storage/public/zQQguxVYkaBLnwaRBTxTJ5.jpg" />}
+                                title={
+                                        <a href="https://ant.design">{item.title}</a>
+                                }
+                                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                            />
+                        </List.Item>
+                    )}
+                />
+                <Pagination showQuickJumper defaultCurrent={1} total={500} onChange={this.onChange} pageSize={3}/>
             </div>
-        );
+        )
     }
 }

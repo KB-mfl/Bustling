@@ -1,6 +1,7 @@
 import React from 'react'
 import TopicalImg from './TopicalImg/TopicalImg'
 import {Card, Icon} from "antd";
+import {Link} from "react-router-dom";
 
 export default class HomePage extends React.Component {
     constructor(props){
@@ -15,6 +16,7 @@ export default class HomePage extends React.Component {
             title:'标题1',
             auth:'朱自强',
             time:"2019-01-09 11:51:51",
+            articleId:'title1',
             sketch:'这是对内容作出简短介绍的副标题1',
             like:101,
             dislike:30
@@ -23,6 +25,7 @@ export default class HomePage extends React.Component {
             title:'标题2',
             auth:'朱紫玲',
             time:"2019-01-09 11:49:25",
+            articleId:'title2',
             sketch:'这是对内容作出简短介绍的副标题2',
             like:101,
             dislike:30
@@ -40,7 +43,7 @@ export default class HomePage extends React.Component {
                     {simpleInformation.map((item) =>
                         <Card key={item.key} title={
                             <div>
-                                <span><a href='/'>{item.title}</a></span>
+                                <Link to={`/user/article/${item.articleId}`}>{item.title}</Link>
                                 <span style={{fontSize:15,marginLeft:'85%'}}>作者：<a href='/'>{item.auth}</a></span>
                             </div>
                         }>

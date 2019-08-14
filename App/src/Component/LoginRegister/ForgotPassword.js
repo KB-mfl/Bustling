@@ -29,7 +29,7 @@ class ForgotPassword extends React.Component{
                 }).then(r => {
                     message.success('修改成功', 3);
                     this.setState({submiting: false});
-                    setTimeout(()=>{window.location.reload()},3000);
+                    setTimeout(()=>{window.location.href='/login'},3000);
                 }).catch(e => {
                     message.error('修改失败');
                     console.log(e);

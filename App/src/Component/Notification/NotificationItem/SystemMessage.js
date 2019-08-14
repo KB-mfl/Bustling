@@ -1,4 +1,5 @@
 import React from 'react'
+import ChangTags from './ChangeTags'
 export default class SystemMessage extends React.Component{
     constructor(props){
         super(props)
@@ -6,7 +7,7 @@ export default class SystemMessage extends React.Component{
     render() {
         return(
             <div>
-                这里是系统消息
+                <ChangTags/>
             </div>
         )
     }

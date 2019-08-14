@@ -98,7 +98,7 @@ class LeftMenu extends React.Component{
                         </span>
                     }
                     >
-                        <Menu.Item key='netPartnerMessage'><Link to='/user/notification/netPartnerMessage/1'/><Icon type='twitter'/>网友留言<Badge count={100} style={{ backgroundColor: '#52c41a',boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
+                        <Menu.Item key='netPartnerMessage'><Link to='/user/notification/netPartnerMessage'/><Icon type='twitter'/>网友留言<Badge count={100} style={{ backgroundColor: '#52c41a',boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
                         <Menu.Item key='systemMessage'><Link to='/user/notification/systemMessage'/><Icon type='sound'/>系统通知<Badge count={10} style={{boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
                     </SubMenu>
                     {window.authIndex ===1 &&
