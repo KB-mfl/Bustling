@@ -42,13 +42,13 @@ func (user *User)AfterUpdate(scope *gorm.Scope) (err error) {
 }
 
 func (user *User) GetData(kind string) map[string]interface{} {
+	db := Orm.GetDB()
+	var role Role
+	if err := db.Model(user).Related(&role).Find(&role).Error; err != nil {
+		panic(err)
+	}
 	switch kind {
 	case "detail":
-		db := Orm.GetDB()
-		var role Role
-		if err := db.Model(user).Related(&role).Find(&role).Error; err != nil {
-			panic(err)
-		}
 		return map[string]interface{} {
 			"username": user.Username,
 			"avatar": user.Avatar,
@@ -57,6 +57,17 @@ func (user *User) GetData(kind string) map[string]interface{} {
 			"role": role.GetData(),
 			"introduction": user.Introduction,
 		}
+	case "profile":
+		return map[string]interface{}{
+			"username": user.Username,
+			"avatar": user.Avatar,
+			"create_at": user.CreatedAt,
+			"gender": user.Gender,
+			"role": role.GetData(),
+			"introduction": user.Introduction,
+			"email": user.Email,
+		}
+
 	default:
 		return make(map[string]interface{})
 	}
