@@ -2,6 +2,7 @@ package Route
 
 import (
 	"Bustling/go-api/Boot/Http"
+	"Bustling/go-api/Controller/Article"
 	"Bustling/go-api/Controller/Auth"
 	"Bustling/go-api/Controller/File"
 	"Bustling/go-api/Controller/User"
@@ -42,5 +43,9 @@ func AddApiRoute() {
 		user.PUT("profile", User.Change)
 
 		user.PUT("security", User.ResetPassword)
+	}
+	article := Http.Router.Group("/article")
+	{
+		article.POST("/create", Article.Create)
 	}
 }
