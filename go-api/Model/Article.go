@@ -10,6 +10,7 @@ type Article struct {
 	ID 			uuid.UUID	`gorm:"primary_key;unique"`
 	UserId  	uuid.UUID	`gorm:"not null"`
 	Title   	string		`gorm:"not null"`
+	ArticleType string		`gorm:"not null"`
 	Tags    	string		`gorm:"not null"`
 	HtmlContent string		`gorm:"type:text;not null"`
 	RawContent  string		`gorm:"type:text;not null"`
