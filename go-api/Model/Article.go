@@ -41,3 +41,19 @@ func (article *Article)AfterUpdate(scope *gorm.Scope) (err error) {
 	err = scope.SetColumn("UpdatedAt", time.Now())
 	return
 }
+
+func (article *Article)GetData(kind string) map[string]interface{} {
+	switch kind {
+	case "list":
+		return map[string]interface{}{
+			"user_id":    article.UserId,
+			"id":         article.ID,
+			"title": 	  article.Title,
+			"tags":       article.Tags,
+			"created_at": article.CreatedAt,
+			"updated_at": article.UpdatedAt,
+		}
+	default:
+		return map[string]interface{}{}
+	}
+}

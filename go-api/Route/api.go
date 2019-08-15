@@ -36,16 +36,21 @@ func AddApiRoute() {
 	}
 	file := Http.Router.Group("/")
 	{
-		file.POST("/upload", File.Upload)
+		file.POST("upload", File.Upload)
 	}
 	user := Http.Router.Group("/user")
 	{
 		user.PUT("profile", User.Change)
 
 		user.PUT("security", User.ResetPassword)
+
+		user.GET("profile/:user_id", User.Profile)
 	}
 	article := Http.Router.Group("/article")
 	{
-		article.POST("/create", Article.Create)
+		article.POST("create", Article.Create)
+
+		article.GET("*articleType", Article.GetList)
+
 	}
 }
