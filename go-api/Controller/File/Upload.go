@@ -28,7 +28,7 @@ func Upload(c *gin.Context)  {
 	}
 	mimeType := strings.Split(header.Filename, ".")[1]
 	filename := uuid.NewV4().String()
-	out, err := os.Create("public/"+filename+"."+mimeType)
+	out, err := os.Create("public/images"+filename+"."+mimeType)
 	if err != nil {
 		panic(err)
 	}
