@@ -12,10 +12,10 @@ import (
  * @apiName Create
  * @apiPermission Login
  * @apiParam {string} title 文章标题
- * @apiParam {string} articleType 文章类型
+ * @apiParam {string} article_type 文章类型
  * @apiParam {string} tags 文章标签
- * @apiParam {string} htmlContent html格式
- * @apiParam {string} rawContent raw格式
+ * @apiParam {string} html_content html格式
+ * @apiParam {string} raw_content raw格式
  * @apiParamExample {json} Request-Example:
  * {
  *      'title': '震惊！！！',
