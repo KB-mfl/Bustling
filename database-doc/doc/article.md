@@ -5,9 +5,10 @@ TABLE:*article*
 | string | id |          |         |        | uuid4   | &radic; |
 | string | user_id |     |         |        | uuid4   |         |
 | string | title |       |         |        | 文章标题 |         |
+| string | articleType | |         |        |         |         |
 | string | tags |        |         |        | 文章标签 |         |
-| text | content |       |         |        | 文章内容 |         |
-| string | user_id |     |         |        | 作者id   |         |
+| text | htmlContent |   |         |        | html格式 |         |
+| text | rawContent |    |         |        | raw格式  |         |
 | int  | likes |         | 0       |        | 喜欢     |         |
 | int  | unlikes |       | 0       |        | 不喜欢   |         |
 | int  | views |         | 0       |        | 浏览数   |         |
