@@ -24,10 +24,9 @@ preprocess().then(() => {
     if(url ==='login'|| url=== 'register'){
         ReactDOM.render(<Layout/>, document.getElementById('root'));
     }
-    else if(store.get('token').Api_Token!==null){
-        ReactDOM.render(<Index/>, document.getElementById('root'));
-    }
     else if(url === 'forgot'){
         ReactDOM.render(<Layout/>, document.getElementById('root'));
+    }else {
+        ReactDOM.render(<Index/>, document.getElementById('root'));
     }
 });

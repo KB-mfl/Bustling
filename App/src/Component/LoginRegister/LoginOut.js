@@ -11,11 +11,9 @@ export default class LoginOut extends React.Component{
     }
     render() {
         return(
-            <div>
                 <Button type="danger" onClick={this.LoginOut}>
                     登出
                 </Button>
-            </div>
         )
     }
 }

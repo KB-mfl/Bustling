@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import store from 'store';
 import {Button, Col, Form, Input, message, Row} from "antd";
 import httpService from "../../service";
 import CryptoJS from "crypto-js";
@@ -21,9 +22,11 @@ class ChangePassword extends React.Component{
                     password_old: CryptoJS.SHA1(values.password_old).toString(),
                     password_new: CryptoJS.SHA1(values.password).toString(),
                 }).then(r => {
-                    message.success('修改成功', 3);
+                    message.success('修改成功，请重新登录', 3);
                     this.setState({submiting: false});
-                    setTimeout(()=>{window.location.reload()},3000);
+                    setTimeout(()=>{
+                        store.remove('token');
+                        window.location.href='/login'},3000);
                 }).catch(e => {
                     message.error('修改失败');
                     console.log(e);
