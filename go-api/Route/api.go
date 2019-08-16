@@ -53,5 +53,7 @@ func AddApiRoute() {
 		article.GET("list/*articleType", Article.GetList)
 
 		article.GET("detail/:article_id", Article.GetDetail)
+
+		article.GET("revise/:article_id", Article.GetRevise)
 	}
 }

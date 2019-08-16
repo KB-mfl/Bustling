@@ -65,6 +65,14 @@ func (article *Article)GetData(kind string) map[string]interface{} {
 			"created_at": article.CreatedAt,
 			"updated_at": article.UpdatedAt,
 		}
+	case "revise":
+		return map[string]interface{}{
+			"id": 		  article.ID,
+			"title":	  article.Title,
+			"tags":		  article.Tags,
+			"article_type":article.ArticleType,
+			"raw_content":article.RawContent,
+		}
 
 	default:
 		return map[string]interface{}{}
