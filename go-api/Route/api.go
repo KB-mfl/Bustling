@@ -48,7 +48,7 @@ func AddApiRoute() {
 	}
 	article := Http.Router.Group("/article")
 	{
-		article.POST("create", Article.Create)
+		article.POST("/", Article.Create)
 
 		article.GET("list/*articleType", Article.GetList)
 

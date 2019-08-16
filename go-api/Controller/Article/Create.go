@@ -8,7 +8,7 @@ import (
 )
 
 /**
- * @api {POST} article/create 发表文章-Create
+ * @api {POST} article/ 发表文章-Create
  * @apiGroup Article
  * @apiName Create
  * @apiPermission User
