@@ -10,7 +10,7 @@ import (
  * @api {GET} user/profile/:user_id 获取用户信息-GetProfile
  * @apiGroup User
  * @apiName Profile
- * @apiPermission Login
+ * @apiPermission User/Admin
  * @apiSuccess {string} username 用户名
  * @apiSuccess {string} avatar 头像
  * @apiSuccess {string} email 邮箱

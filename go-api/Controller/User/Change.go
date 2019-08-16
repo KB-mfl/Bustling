@@ -10,7 +10,7 @@ import (
  * @api {PUT} user/profile 修改简介-Change
  * @apiGroup User
  * @apiName Change
- * @apiPermission Login
+ * @apiPermission User/Admin
  * @apiParam {string} [username] 用户名
  * @apiParam {string} [avatar] 头像
  * @apiParam {string} [introduction] 个人介绍

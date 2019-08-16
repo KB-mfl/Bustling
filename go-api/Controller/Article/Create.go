@@ -11,7 +11,7 @@ import (
  * @api {POST} article/create 发表文章-Create
  * @apiGroup Article
  * @apiName Create
- * @apiPermission Login
+ * @apiPermission User
  * @apiParam {string} title 文章标题
  * @apiParam {string} article_type 文章类型
  * @apiParam {string} tags 文章标签

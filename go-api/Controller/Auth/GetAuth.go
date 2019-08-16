@@ -10,7 +10,7 @@ import (
  * @api {GET} auth/auth 获取用户信息-GetAuth
  * @apiGroup Auth
  * @apiName GetAuth
- * @apiPermission ALl
+ * @apiPermission All
  * @apiSuccess {string} username 用户名
  * @apiSuccess {string} avatar 头像
  * @apiSuccess {string} email 邮箱

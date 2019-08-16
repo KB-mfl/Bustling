@@ -11,7 +11,7 @@ import (
  * @api {PUT} user/security 修改密码-ResetPassword
  * @apiGroup User
  * @apiName ResetPassword
- * @apiPermission Login
+ * @apiPermission User/Admin
  * @apiParam {string} password_old 旧密码
  * @apiParam {string} password_new 新密码
  * @apiParamExample {json} Request-Example:

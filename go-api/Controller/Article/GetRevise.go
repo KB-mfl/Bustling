@@ -7,6 +7,26 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+/**
+ *@api {GET} article/revise/:article_id 获取修改文章-GetRevise
+ *@apiGroup Article
+ *@apiName GetRevise
+ *@apiPermission User
+ * @apiSuccess {string} id 文章id
+ * @apiSuccess {string} title 文章标题
+ * @apiSuccess {string} tags 文章标签
+ * @apiSuccess {string} article_type 文章类型
+ * @apiSuccess {text} raw_article 文章内容
+ * @apiSuccessExample {json} Success-Example:
+ * 	{
+ *      'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      'title': '哇哈哈',
+ *      'tags': '牛奶/儿童饮料',
+ * 		'article_type': 'life',
+ * 		'raw_content': '假装这是raw格式的数据'
+ * 	},
+ */
+
 func GetRevise(c *gin.Context)  {
 	userId,_ := c.Get("user")
 	if userId == nil {
