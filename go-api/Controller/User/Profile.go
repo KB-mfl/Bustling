@@ -35,14 +35,15 @@ import (
  */
 
 func Profile(c *gin.Context)  {
-	userEmail,_ := c.Get("user")
+	userId,_ := c.Get("user")
 	db := Orm.GetDB()
-	if db.Where("email=?", userEmail).First(&Model.User{}).RecordNotFound() {
+	if userId == nil {
 		c.AbortWithStatus(401)
+		return
 	}
-	userId := c.Param("user_id")
+	otherUserId := c.Param("user_id")
 	var user Model.User
-	if err := db.Where("id=?", userId).First(&user).Error; err != nil {
+	if err := db.Where("id=?", otherUserId).First(&user).Error; err != nil {
 		panic(err)
 	}
 	c.JSON(200, user.GetData("profile"))

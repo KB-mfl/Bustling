@@ -3,7 +3,6 @@ package User
 import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,11 +32,12 @@ type ChangeValidate struct {
 }
 
 func Change(c *gin.Context)  {
-	userEmail, _ := c.Get("user")
+	userId, _ := c.Get("user")
 	db := Orm.GetDB()
 	var user Model.User
-	if db.Where("email=?", userEmail).First(&user).RecordNotFound() {
+	if userId == nil {
 		c.AbortWithStatus(401)
+		return
 	}
 	var data ChangeValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -60,7 +60,6 @@ func Change(c *gin.Context)  {
 	} else {
 		introduction = user.Introduction
 	}
-	fmt.Println(data.Gender)
 	if data.Gender != 0 {
 		gender = data.Gender
 	} else {

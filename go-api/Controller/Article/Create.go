@@ -4,6 +4,7 @@ import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 )
 
 /**
@@ -41,15 +42,13 @@ func Create(c *gin.Context)  {
 		c.JSON(422, gin.H{"message": "信息格式不正确哦"})
 		panic(err)
 	}
-	userEmail, _ := c.Get("user")
-	if userEmail == nil {
+	userId, _ := c.Get("user")
+	if userId == nil {
 		c.AbortWithStatus(401)
 	}
 	db := Orm.GetDB()
-	var user Model.User
-	db.Where("email=?", userEmail).First(&user)
 	var article = Model.Article{
-		UserId: user.ID,
+		UserId: userId.(uuid.UUID),
 		Title: data.Title,
 		Tags: data.Tags,
 		HtmlContent: data.HtmlContent,
