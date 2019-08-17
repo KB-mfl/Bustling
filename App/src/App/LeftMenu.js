@@ -2,6 +2,7 @@ import React from 'react'
 import { Menu, Icon, Layout, Avatar, Badge} from 'antd'
 import { withRouter, Link} from 'react-router-dom'
 import store from 'store'
+import LeftDrawer from "./LeftDrawer";
 const { SubMenu } = Menu;
 
 class LeftMenu extends React.Component{
@@ -52,33 +53,26 @@ class LeftMenu extends React.Component{
         store.set('collapsed',!this.state.collapsed);
         console.log(this.state.collapsed);
     };
+    onCollapse = collapsed => {
+        console.log(collapsed);
+        this.setState({ collapsed });
+    };
+
     render() {
         return (
             <Layout.Sider
-                theme="light"
-                trigger={null}
+                theme="dark"
                 collapsible
                 collapsed={this.state.collapsed}
+                onCollapse={this.onCollapse}
             >
                 <div>
                     {!this.state.collapsed?
                         <div className="logo">晴空交友论坛</div>
-                        :<Avatar style={{marginLeft:20,marginTop:10}} src={ `http://localhost:8000/storage/public/${window.authInfor.avatar}`}/>
+                        :<Avatar style={{marginLeft:22,marginTop:10}} src={ `http://localhost:8000/storage/public/${window.authInfor.avatar}`}/>
                     }
-                    <Icon
-                        type={this.state.collapsed ? 'align-right' : 'align-left'}
-                        className="trigger"
-                        onClick={this.controlCollapse}
-                    />
                 </div>
-                <Menu theme="light" mode="inline" className="LeftItem" defaultSelectedKeys={[this.getDefaultKey()]}>
-                    {/*{this.leftMenuList.map(o =>*/}
-                    {/*    <Menu.Item key={o.key}>*/}
-                    {/*        <Link to={`/user/${o.key}`}/>*/}
-                    {/*        <Icon type={o.icon}/>*/}
-                    {/*        <span>{o.title}</span>*/}
-                    {/*    </Menu.Item>)*/}
-                    {/*}*/}
+                <Menu theme="dark" mode="inline" className="LeftItem" defaultSelectedKeys={[this.getDefaultKey()]}>
                     <Menu.Item key='homepage'>
                         <Link to='/user/homepage'/>
                         <Icon type='key'/>

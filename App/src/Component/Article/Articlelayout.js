@@ -1,14 +1,22 @@
 import React from 'react'
 import httpService from '../../service';
-import {message, Tag, Icon, Avatar, Comment, Card} from "antd";
+import {message, Tag, Icon, Avatar, Comment, Card,Input,Form,Button} from "antd";
 import {Link} from "react-router-dom";
-
+import ArticleModal from "./ArticleModal";
+const { TextArea } = Input;
 export default class Articlelayout extends React.Component{
     constructor(props) {
         super(props);
         this.state ={
+            valueComment:'',
+            like:100,
+            disLike:51,
             isLike:false,
-            data:null
+            isDisLike:false,
+            data:null,
+            isShowFirstComment:false,
+            valueFirstComment:'',
+            isShowSecondComment:false
         };
         this.articleId = window.location.pathname.split('/')[3];
     }
@@ -24,19 +32,66 @@ export default class Articlelayout extends React.Component{
         // })
     }
 
+    fetchData = () =>{
+        ///
+    }
+
+    onChange = (e)=>{
+        this.setState({
+            valueComment:e.target.value
+        },function () {
+            console.log(this.state.valueComment);
+        })
+    }
+
+    onChangeValueFirstComment = (value) => {
+        this.setState({
+            valueFirstComment:value
+        })
+    };
+
     postComment = () => {
         console.log(123);
     }
 
     addLike = () => {
         this.setState({
-            isLike:!this.state.isLike
+            isLike:!this.state.isLike,
+        },function () {
+            console.log(this.state.isLike);
+            if(this.state.isLike){
+                this.setState({
+                    like:this.state.like+1
+                })
+            }else{
+                this.setState({
+                    like:this.state.like-1
+                })
+            }
         })
-        console.log('我点赞了');
 
     };
 
+    showFirstComment =() =>{
+        this.setState({
+            isShowFirstComment:!this.state.isShowFirstComment
+        })
+    }
+
     addDislike =() => {
+        this.setState({
+            isDisLike:!this.state.isDisLike,
+        },function () {
+            if(this.state.isDisLike) {
+                this.setState({
+                    disLike: this.state.disLike+1,
+                })
+            }else
+                this.setState({
+                    disLike:this.state.disLike-1
+                })
+
+        });
         console.log('傻逼');
     };
 
@@ -60,9 +115,19 @@ export default class Articlelayout extends React.Component{
             <Comment
                 actions={[
                     <div>
-                        <span style={{marginRight:10}}>喜欢<Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':''}}/></span>
-                        <span style={{marginRight:10}}>点灭<Icon type='dislike' onClick={this.addDislike}/></span>
-                        <span key="comment-nested-reply-to" onClick={this.postComment}>Reply to</span>
+                        <span style={{marginRight:10, userSelect:false}}>喜欢<Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':''}}/>({this.state.like})</span>
+                        <span style={{marginRight:10, userSelect:false}}>点灭<Icon type='dislike' onClick={this.addDislike} style={{color:(this.state.isDisLike)?'red':''}}/>({this.state.disLike})</span>
+                        <ArticleModal auth={data.auth}/>
+                        {/*{this.state.isShowFirstComment&&*/}
+                        {/*<div>*/}
+                        {/*    <Form.Item>*/}
+                        {/*        <TextArea rows={3} onChange={this.onChangeValueFirstComment} value={this.state.valueFirstComment}/>*/}
+                        {/*    </Form.Item>*/}
+                        {/*    <Form.Item>*/}
+                        {/*        <Button onClick={this.postComment} htmlType="submit" type='primary'>发送</Button>*/}
+                        {/*    </Form.Item>*/}
+                        {/*</div>*/}
+                        {/*}*/}
                     </div>
                 ]}
                 author={<a>科比</a>}
@@ -73,9 +138,12 @@ export default class Articlelayout extends React.Component{
                     />
                 }
                 content={
-                    <p>
-                       湖人总冠军
-                    </p>
+                    <div>
+                        <p>
+                            湖人总冠军
+                        </p>
+
+                    </div>
                 }
             >
                 <Comment
@@ -97,7 +165,7 @@ export default class Articlelayout extends React.Component{
             </Comment>
         );
 
-
+        const {valueComment} = this.state
         return(
             <div>
                 <div>
@@ -128,6 +196,16 @@ export default class Articlelayout extends React.Component{
                     style={{marginTop:30}}
                 >
                     <ExampleComment/>
+                    <div>
+                        <Form.Item>
+                            <TextArea rows={4} onChange={this.onChange} value={valueComment} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button htmlType="submit" type="primary">
+                                添加评论
+                            </Button>
+                        </Form.Item>
+                    </div>
                 </Card>
             </div>
         )
