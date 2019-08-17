@@ -20,6 +20,7 @@ import (
  * @apiSuccessExample {json} Success-Example:
  * {
  *      'username': 'test',
+ *      'id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
  *      'avatar': 'picture.png',
  *      'email': 'haha@example.com'
  *      'gender': 1

@@ -3,7 +3,6 @@ package Middleware
 import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -13,7 +12,6 @@ func AuthServiceProvider() gin.HandlerFunc {
 		db := Orm.GetDB()
 		token := c.Request.Header.Get("Api_Token")
 		var apiToken Model.ApiToken
-		fmt.Println(token)
 		if !db.Where("token=?", token).First(&apiToken).RecordNotFound() {
 			if apiToken.ExpiredAt.Before(time.Now()) {
 				c.Set("user", nil)

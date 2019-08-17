@@ -50,6 +50,7 @@ func (user *User) GetData(kind string) map[string]interface{} {
 	switch kind {
 	case "detail":
 		return map[string]interface{} {
+			"id": user.ID,
 			"username": user.Username,
 			"avatar": user.Avatar,
 			"email": user.Email,

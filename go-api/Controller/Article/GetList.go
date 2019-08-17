@@ -8,7 +8,7 @@ import (
 )
 
 /**
- * @api {GET} article/*articleType 获取文章列表-GetList
+ * @api {GET} article/list/:articleType 获取文章列表-GetList
  * @apiGroup Article
  * @apiName GetList
  * @apiPermission All
