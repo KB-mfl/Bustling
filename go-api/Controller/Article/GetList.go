@@ -3,6 +3,7 @@ package Article
 import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -54,12 +55,13 @@ import (
 
 func GetList(c *gin.Context)  {
 	var articleType = c.Param("articleType")
+	fmt.Println(articleType)
 	var limit, _ = strconv.Atoi(c.DefaultQuery("limit", "7"))
 	var offset, _ = strconv.Atoi(c.DefaultQuery("offset", "0"))
 	var articles []Model.Article
 	db := Orm.GetDB()
 	if articleType != "all" {
-		if err := db.Where("article_type=?", articleType[1:]).
+		if err := db.Where("article_type=?", articleType).
 			Limit(limit).Offset(offset).Find(&articles).Error; err != nil {
 			panic(err)
 		}

@@ -65,7 +65,7 @@ func Change(c *gin.Context)  {
 	} else {
 		gender = user.Gender
 	}
-	db.Model(&user).Updates(Model.User{
+	db.Where("id=?", userId).Model(&user).Updates(Model.User{
 		Username: username,
 		Avatar: avatar,
 		Introduction: introduction,
