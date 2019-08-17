@@ -46,21 +46,21 @@ func Register(c *gin.Context)  {
 	}
 	db := Orm.GetDB()
 	if !db.Where("username=?", data.Username).First(&Model.User{}).RecordNotFound() {
-		c.JSON(401, gin.H{"message":"该用户名已被注册哦"})
+		c.JSON(403, gin.H{"message":"该用户名已被注册哦"})
 		return
 	}
 	if !db.Where("email=?", data.Email).First(&Model.User{}).RecordNotFound() {
-		c.JSON(401, gin.H{"message":"该邮箱已被注册哦"})
+		c.JSON(403, gin.H{"message":"该邮箱已被注册哦"})
 		return
 	}
 
 	var code Model.Code
 	if db.Where("email=?", data.Email).Last(&code).RecordNotFound() || code.Code != data.Code {
-		c.JSON(401, gin.H{"message":"验证码错误"})
+		c.JSON(403, gin.H{"message":"验证码错误"})
 		return
 	}
 	if code.ExpiredAt.Before(time.Now()) {
-		c.JSON(401, gin.H{"message": "验证码过期了哦"})
+		c.JSON(403, gin.H{"message": "验证码过期了哦"})
 		return
 	}
 

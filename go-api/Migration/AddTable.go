@@ -9,5 +9,6 @@ func AddTable()  {
 		"api_token": &Model.ApiToken{},
 		"code": &Model.Code{},
 		"example": &Model.Example{},
+		"article": &Model.Article{},
 	})
 }

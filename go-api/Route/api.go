@@ -2,6 +2,7 @@ package Route
 
 import (
 	"Bustling/go-api/Boot/Http"
+	"Bustling/go-api/Controller/Article"
 	"Bustling/go-api/Controller/Auth"
 	"Bustling/go-api/Controller/File"
 	"Bustling/go-api/Controller/User"
@@ -35,12 +36,26 @@ func AddApiRoute() {
 	}
 	file := Http.Router.Group("/")
 	{
-		file.POST("/upload", File.Upload)
+		file.POST("upload", File.Upload)
 	}
 	user := Http.Router.Group("/user")
 	{
 		user.PUT("profile", User.Change)
 
 		user.PUT("security", User.ResetPassword)
+
+		user.GET("profile/:user_id", User.Profile)
+	}
+	article := Http.Router.Group("/article")
+	{
+		article.POST("/", Article.Create)
+
+		article.GET("list/:articleType", Article.GetList)
+
+		article.GET("self_list/:user_id", Article.GetSelfList)
+
+		article.GET("detail/:article_id", Article.GetDetail)
+
+		article.GET("revise/:article_id", Article.GetRevise)
 	}
 }

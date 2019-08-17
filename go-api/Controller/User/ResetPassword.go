@@ -11,7 +11,7 @@ import (
  * @api {PUT} user/security 修改密码-ResetPassword
  * @apiGroup User
  * @apiName ResetPassword
- * @apiPermission Login
+ * @apiPermission User/Admin
  * @apiParam {string} password_old 旧密码
  * @apiParam {string} password_new 新密码
  * @apiParamExample {json} Request-Example:
@@ -27,9 +27,10 @@ type ResetPasswordValidate struct {
 }
 
 func ResetPassword(c *gin.Context)  {
-	userEmail, _ := c.Get("user")
-	if userEmail == nil {
+	userId, _ := c.Get("user")
+	if userId == nil {
 		c.AbortWithStatus(401)
+		return
 	}
 	var data ResetPasswordValidate
 	if err :=c.ShouldBindJSON(&data); err != nil {
@@ -38,7 +39,7 @@ func ResetPassword(c *gin.Context)  {
 	}
 	db := Orm.GetDB()
 	var user Model.User
-	db.Where("email=?", userEmail).First(&user)
+	db.Where("id=?", userId).First(&user)
 	if !Controller.Sha256Check(user.Password, data.PasswordOld) {
 		c.JSON(403, gin.H{"message":"密码错误"})
 		return

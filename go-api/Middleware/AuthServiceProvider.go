@@ -19,7 +19,7 @@ func AuthServiceProvider() gin.HandlerFunc {
 				db := Orm.GetDB()
 				var user Model.User
 				db.Model(&apiToken).Related(&user)
-				c.Set("user", user.Email)
+				c.Set("user", user.ID)
 				duration, _ := time.ParseDuration("30m")
 				db.Model(&apiToken).Update("expired_at", apiToken.ExpiredAt.Add(duration))
 			}
