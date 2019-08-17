@@ -43,37 +43,31 @@ func (article *Article)AfterUpdate(scope *gorm.Scope) (err error) {
 }
 
 func (article *Article)GetData(kind string) map[string]interface{} {
+	var data = map[string]interface{} {
+		"id": 			article.ID,
+		"title":		article.Title,
+		"tags":			article.Tags,
+		"article_type": article.ArticleType,
+	}
 	switch kind {
 	case "list":
-		return map[string]interface{}{
-			"user_id":    article.UserId,
-			"id":         article.ID,
-			"title": 	  article.Title,
-			"tags":       article.Tags,
-			"article_type":article.ArticleType,
-			"created_at": article.CreatedAt,
-			"updated_at": article.UpdatedAt,
-		}
+			data["user_id"] =  article.UserId
+			data["created_at"] = article.CreatedAt
+			data["updated_at"] = article.UpdatedAt
+			data["views"] = article.Views
+			data["reviewed"] = article.Reviewed
+		return data
 	case "detail":
-		return map[string]interface{}{
-			"user_id":    article.UserId,
-			"id": 		  article.ID,
-			"title":	  article.Title,
-			"tags":		  article.Tags,
-			"article_type":article.ArticleType,
-			"html_content":article.HtmlContent,
-			"created_at": article.CreatedAt,
-			"updated_at": article.UpdatedAt,
-		}
+			data["user_id"] = article.UserId
+			data["views"] =	article.Views
+			data["reviewed"] = article.Reviewed
+			data["html_content"] = article.HtmlContent
+			data["created_at"] = article.CreatedAt
+			data["updated_at"] = article.UpdatedAt
+		return data
 	case "revise":
-		return map[string]interface{}{
-			"id": 		  article.ID,
-			"title":	  article.Title,
-			"tags":		  article.Tags,
-			"article_type":article.ArticleType,
-			"raw_content":article.RawContent,
-		}
-
+			data["raw_content"] = article.RawContent
+		return data
 	default:
 		return map[string]interface{}{}
 	}
