@@ -50,7 +50,9 @@ func AddApiRoute() {
 	{
 		article.POST("/", Article.Create)
 
-		article.GET("list/*articleType", Article.GetList)
+		article.GET("list/:articleType", Article.GetList)
+
+		article.GET("self_list/:user_id", Article.GetSelfList)
 
 		article.GET("detail/:article_id", Article.GetDetail)
 
