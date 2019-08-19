@@ -16,7 +16,7 @@ export default class TextEditor extends React.Component {
 
 
      componentDidMount () {
-         const htmlContent = store.get('editorState').editorState;
+         const htmlContent = store.get('editorState').editorState||null;
          console.log(htmlContent);
          this.setState({
              editorState: BraftEditor.createEditorState(htmlContent || null)

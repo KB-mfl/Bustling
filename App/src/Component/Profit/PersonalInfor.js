@@ -15,9 +15,9 @@ class PersonalInfor extends React.Component{
                     />
                 </Form.Item>
                 <Form.Item>
-                    <strong>性别({window.authInfor.gender===0 ? <Icon type='woman'/>:<Icon type='man'/>})</strong>
+                    <strong>性别({window.authInfor.gender===1 ? <Icon type='woman'/>:<Icon type='man'/>})</strong>
                     <Input
-                        value={window.authInfor.gender===0 ? '女':'男'}
+                        value={window.authInfor.gender===1 ? '女':'男'}
                         disabled={true}
                     />
                 </Form.Item>

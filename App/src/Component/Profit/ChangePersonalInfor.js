@@ -9,7 +9,7 @@ class ChangePersonalInfor extends React.Component{
         super(props);
         this.state={
             username:`${window.authInfor.username}`,
-            gender:`${window.authInfor.gender}`,
+            gender:null,
             introduction:`${window.authInfor.introduction}`,
             avatar:`${window.authInfor.avatar}`
         }
@@ -61,10 +61,10 @@ class ChangePersonalInfor extends React.Component{
                         </FormItem>
                         <FormItem>
                             <Radio.Group onChange={this.changeGender} value={this.state.gender}>
-                                <Radio value={0}>
+                                <Radio value={1}>
                                     女(<Icon type='woman'/>)
                                 </Radio>
-                                <Radio value={1}>
+                                <Radio value={2}>
                                     男(<Icon type='man'/>)
                                 </Radio>
                             </Radio.Group>
@@ -76,12 +76,14 @@ class ChangePersonalInfor extends React.Component{
                         <strong>姓名</strong>
                         <Input
                             onChange={e => {this.setState({username:e.target.value})}}
+                            placeholder={this.state.username}
                         />
                     </FormItem>
                     <FormItem>
                         <strong>个人简介</strong>
                         <Input
                             onChange={e => {this.setState({introduction:e.target.value})}}
+                            placeholder={this.state.introduction}
                         />
                     </FormItem>
                 </Form>
