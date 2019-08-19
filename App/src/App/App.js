@@ -14,6 +14,7 @@ import HomePage from '../Component/HomePage/HomePage'
 import Manage from '../Admin/Manage/Manage'
 import Writing from "../User/Writing/Writing";
 import LoginOut from "../Component/LoginRegister/LoginOut";
+import LeftDrawer from "./LeftDrawer";
 const { Header, Footer, Sider, Content } = Layout;
 class App extends Component {
     constructor(props){

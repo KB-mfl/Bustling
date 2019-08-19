@@ -10,6 +10,7 @@ import SystemMessage from "../Component/Notification/NotificationItem/SystemMess
 import ViewProcess from "./Writing/ViewProcess";
 import WritePaper from "./Writing/WritePaper";
 import ArticleLayout from "../Component/Article/Articlelayout";
+import LeftDrawer from "../App/LeftDrawer";
 
 export default class extends React.Component {
     constructor(props){
