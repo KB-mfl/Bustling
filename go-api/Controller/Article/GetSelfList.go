@@ -17,6 +17,8 @@ import (
  * @apiParam {string} [articleType] 文章类型
  * @apiParam {int} [limit]
  * @apiParam {int} [offset]
+ * @apiParam {bool} [reviewed] 是否通过审核
+ * @apiSuccess {int} total 总共文章数量
  * @apiSuccess {string} user_id 作者id
  * @apiSuccess {string} id 文章id
  * @apiSuccess {string} article_type 文章类型
@@ -28,28 +30,30 @@ import (
  * @apiSuccess {string} updated_at 文章更新时间
  * @apiSuccessExample {json} Success-Example:
  *{
- *
- * 		{
- *      	'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'title': '哇哈哈',
- *      	'tags': '牛奶/儿童饮料',
- *			'views': 2,
- *			'reviewed': true,
- *			'article_type': 'life',
- *      	'updated_at': '2019-08-15T19:53:21+08:00',
- *      	'created_at': '2019-09-24T17:43:11+08:00'
- * 		},
- * 		{
- *      	'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'title': '哇哈哈',
- *      	'tags': '牛奶/儿童饮料',
- * 			'views': 0
- *			'reviewed': false,
- *			'article_type': 'study',
- *      	'updated_at': '2019-08-15T19:53:21+08:00',
- *      	'created_at': '2019-09-24T17:43:11+08:00'
+ *		'total': 12,
+ *		{
+ * 			{
+ *      		'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'title': '哇哈哈',
+ *      		'tags': '牛奶/儿童饮料',
+ *				'views': 2,
+ *				'reviewed': true,
+ *				'article_type': 'life',
+ *      		'updated_at': '2019-08-15T19:53:21+08:00',
+ *      		'created_at': '2019-09-24T17:43:11+08:00'
+ * 			},
+ * 			{
+ *      		'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'title': '哇哈哈',
+ *      		'tags': '牛奶/儿童饮料',
+ * 				'views': 0
+ *				'reviewed': false,
+ *				'article_type': 'study',
+ *      		'updated_at': '2019-08-15T19:53:21+08:00',
+ *      		'created_at': '2019-09-24T17:43:11+08:00'
+ * 			}
  * 		}
  *}
  */
@@ -61,18 +65,24 @@ func GetSelfList(c *gin.Context)  {
 		c.AbortWithStatus(403)
 		return
 	}
+	var reviewed, _ = strconv.ParseBool(c.DefaultQuery("reviewed", strconv.FormatBool(false)))
+	fmt.Println(reviewed)
 	var limit, _ = strconv.Atoi(c.DefaultQuery("limit", "7"))
-	fmt.Println(limit)
 	var offset, _ = strconv.Atoi(c.DefaultQuery("offset", "0"))
 	var articles []Model.Article
 	var db = Orm.GetDB()
-	if err := db.Where("user_id=?", userId).Offset(offset).Limit(limit).
-		Find(&articles).Error; err != nil {
+	var count int
+	db.Where("user_id=?", userId).Where("reviewed=?", reviewed).Find(&articles).Count(&count)
+	if err := db.Where("user_id=?", userId).Where("reviewed=?", reviewed).Offset(offset).Limit(limit).
+		Order("updated_at desc").Find(&articles).Error; err != nil {
 		panic(err)
 	}
 	var response []interface{}
 	for _, article := range articles {
 		response = append(response, article.GetData("list"))
 	}
-	c.JSON(200, response)
+	c.JSON(200, gin.H{
+		"data": response,
+		"total": count,
+	})
 }

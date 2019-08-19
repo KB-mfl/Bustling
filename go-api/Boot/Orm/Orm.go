@@ -19,6 +19,7 @@ func InitOrm()  {
 	}
 	db = dbEngine
 	db.SingularTable(true) //禁止表名复数
+	db.LogMode(true)
 }
 
 func GetDB() *gorm.DB {
@@ -37,7 +38,7 @@ func getParams(engine string) string {
 	case "mysql":
 		host := Config.GetStringWithDefault("database.host", "localhost")
 		port := Config.GetStringWithDefault("database.port", "3306")
-		dbname := Config.GetStringWithDefault("database.dbname", "Bustling")
+		dbname := Config.GetStringWithDefault("database.dbname", "QKteam")
 		username := Config.GetStringWithDefault("database.user", "root")
 		password := Config.GetStringWithDefault("database.password", "")
 		mysqlParams := Config.GetStringWithDefault(

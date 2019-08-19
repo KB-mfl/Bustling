@@ -16,6 +16,7 @@ import (
  * @apiParam {string} [articleType] 文章类型
  * @apiParam {int} [limit]
  * @apiParam {int} [offset]
+ * @apiParam {int} total 文章总数
  * @apiSuccess {string} user_id 作者id
  * @apiSuccess {string} id 文章id
  * @apiSuccess {string} article_type 文章类型
@@ -27,29 +28,31 @@ import (
  * @apiSuccess {string} updated_at 文章更新时间
  * @apiSuccessExample {json} Success-Example:
  *{
- *
- * 		{
- *      	'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'title': '哇哈哈',
- *      	'tags': '牛奶/儿童饮料',
- *			'views': 2,
- *			'reviewed': true,
- *			'article_type': 'life',
- *      	'updated_at': '2019-08-15T19:53:21+08:00',
- *      	'created_at': '2019-09-24T17:43:11+08:00'
- * 		},
- * 		{
- *      	'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
- *      	'title': '哇哈哈',
- *      	'tags': '牛奶/儿童饮料',
- * 			'views': 0
- *			'reviewed': false,
- *			'article_type': 'study',
- *      	'updated_at': '2019-08-15T19:53:21+08:00',
- *      	'created_at': '2019-09-24T17:43:11+08:00'
- * 		}
+ *		'total': 12,
+ *		{
+ * 			{
+ *      		'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'title': '哇哈哈',
+ *      		'tags': '牛奶/儿童饮料',
+ *				'views': 2,
+ *				'reviewed': true,
+ *				'article_type': 'life',
+ *      		'updated_at': '2019-08-15T19:53:21+08:00',
+ *      		'created_at': '2019-09-24T17:43:11+08:00'
+ * 			},
+ * 			{
+ *      		'user_id': '22a52817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'id': '2345342817-bc97-4e75-b8cd-a1b5e91cda2f',
+ *      		'title': '哇哈哈',
+ *      		'tags': '牛奶/儿童饮料',
+ * 				'views': 0
+ *				'reviewed': false,
+ *				'article_type': 'study',
+ *      		'updated_at': '2019-08-15T19:53:21+08:00',
+ *      		'created_at': '2019-09-24T17:43:11+08:00'
+ * 			}
+ *		}
  *}
  */
 
@@ -59,20 +62,27 @@ func GetList(c *gin.Context)  {
 	var limit, _ = strconv.Atoi(c.DefaultQuery("limit", "7"))
 	var offset, _ = strconv.Atoi(c.DefaultQuery("offset", "0"))
 	var articles []Model.Article
+	var count int
 	db := Orm.GetDB()
 	if articleType != "all" {
-		if err := db.Where("article_type=?", articleType).
-			Limit(limit).Offset(offset).Find(&articles).Error; err != nil {
-			panic(err)
+		db.Where("article_type=?", articleType).Where("reviewed=?", true).Find(&articles).Count(&count)
+		if db.Where("article_type=?", articleType).Where("reviewed=?", true).Limit(limit).
+			Offset(offset).Order("updated_at desc").Find(&articles).Count(&count).RecordNotFound() {
+			return
 		}
 	} else {
-		if err:= db.Limit(limit).Offset(offset).Find(&articles).Error; err != nil {
-			panic(err)
+		db.Where("reviewed=?", true).Find(&articles).Count(&count)
+		if db.Where("reviewed=?", true).Offset(offset).Limit(limit).
+			Order("updated_at desc").Find(&articles).RecordNotFound() {
+			return
 		}
 	}
 	var response []interface{}
 	for _, article := range articles {
 		response = append(response, article.GetData("list"))
 	}
-	c.JSON(200, response)
+	c.JSON(200, gin.H{
+		"articles": response,
+		"total": count,
+	})
 }
