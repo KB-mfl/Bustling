@@ -23,7 +23,7 @@ import (
  * @apiSuccess {string} title 文章标题
  * @apiSuccess {string} tags 文章标签
  * @apiSuccess {int} views 观看数
- * @apiSuccess {bool} reviewed 是否通过审核
+ * @apiSuccess {int} reviewed 是否通过审核
  * @apiSuccess {string} created_at 文章创建时间
  * @apiSuccess {string} updated_at 文章更新时间
  * @apiSuccessExample {json} Success-Example:
@@ -36,7 +36,7 @@ import (
  *      		'title': '哇哈哈',
  *      		'tags': '牛奶/儿童饮料',
  *				'views': 2,
- *				'reviewed': true,
+ *				'reviewed': 1,
  *				'article_type': 'life',
  *      		'updated_at': '2019-08-15T19:53:21+08:00',
  *      		'created_at': '2019-09-24T17:43:11+08:00'
@@ -47,7 +47,7 @@ import (
  *      		'title': '哇哈哈',
  *      		'tags': '牛奶/儿童饮料',
  * 				'views': 0
- *				'reviewed': false,
+ *				'reviewed': -1,
  *				'article_type': 'study',
  *      		'updated_at': '2019-08-15T19:53:21+08:00',
  *      		'created_at': '2019-09-24T17:43:11+08:00'
@@ -65,14 +65,14 @@ func GetList(c *gin.Context)  {
 	var count int
 	db := Orm.GetDB()
 	if articleType != "all" {
-		db.Where("article_type=?", articleType).Where("reviewed=?", true).Find(&articles).Count(&count)
-		if db.Where("article_type=?", articleType).Where("reviewed=?", true).Limit(limit).
+		db.Where("article_type=?", articleType).Where("reviewed=?", 1).Find(&articles).Count(&count)
+		if db.Where("article_type=?", articleType).Where("reviewed=?", 1).Limit(limit).
 			Offset(offset).Order("updated_at desc").Find(&articles).Count(&count).RecordNotFound() {
 			return
 		}
 	} else {
-		db.Where("reviewed=?", true).Find(&articles).Count(&count)
-		if db.Where("reviewed=?", true).Offset(offset).Limit(limit).
+		db.Where("reviewed=?", 1).Find(&articles).Count(&count)
+		if db.Where("reviewed=?", 1).Offset(offset).Limit(limit).
 			Order("updated_at desc").Find(&articles).RecordNotFound() {
 			return
 		}

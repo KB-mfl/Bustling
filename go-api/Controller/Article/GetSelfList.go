@@ -3,7 +3,6 @@ package Article
 import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
@@ -25,7 +24,7 @@ import (
  * @apiSuccess {string} title 文章标题
  * @apiSuccess {string} tags 文章标签
  * @apiSuccess {int} views 观看数
- * @apiSuccess {bool} reviewed 是否通过审核
+ * @apiSuccess {int} reviewed 是否通过审核
  * @apiSuccess {string} created_at 文章创建时间
  * @apiSuccess {string} updated_at 文章更新时间
  * @apiSuccessExample {json} Success-Example:
@@ -38,7 +37,7 @@ import (
  *      		'title': '哇哈哈',
  *      		'tags': '牛奶/儿童饮料',
  *				'views': 2,
- *				'reviewed': true,
+ *				'reviewed': 1,
  *				'article_type': 'life',
  *      		'updated_at': '2019-08-15T19:53:21+08:00',
  *      		'created_at': '2019-09-24T17:43:11+08:00'
@@ -49,7 +48,7 @@ import (
  *      		'title': '哇哈哈',
  *      		'tags': '牛奶/儿童饮料',
  * 				'views': 0
- *				'reviewed': false,
+ *				'reviewed': -1,
  *				'article_type': 'study',
  *      		'updated_at': '2019-08-15T19:53:21+08:00',
  *      		'created_at': '2019-09-24T17:43:11+08:00'
@@ -65,8 +64,7 @@ func GetSelfList(c *gin.Context)  {
 		c.AbortWithStatus(403)
 		return
 	}
-	var reviewed, _ = strconv.ParseBool(c.DefaultQuery("reviewed", strconv.FormatBool(false)))
-	fmt.Println(reviewed)
+	var reviewed, _ = strconv.ParseInt(c.DefaultQuery("reviewed", "0"), 10, 8)
 	var limit, _ = strconv.Atoi(c.DefaultQuery("limit", "7"))
 	var offset, _ = strconv.Atoi(c.DefaultQuery("offset", "0"))
 	var articles []Model.Article

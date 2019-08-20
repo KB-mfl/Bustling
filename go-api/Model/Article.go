@@ -17,7 +17,7 @@ type Article struct {
 	Likes       int			`gorm:"default:0"`
 	Unlikes		int			`gorm:"default:0"`
 	Views  		int			`gorm:"default:0"`
-	Reviewed	bool		`gorm:"type:bool;default:false"`
+	Reviewed	int		    `gorm:"default:0"`
 
 	CreatedAt 	time.Time
 	UpdatedAt 	time.Time

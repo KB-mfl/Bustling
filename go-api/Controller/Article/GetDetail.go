@@ -18,7 +18,7 @@ import (
  * @apiSuccess {string} article_type 文章类型
  * @apiSuccess {text} html_article 文章内容
  * @apiSuccess {int} views 观看数
- * @apiSuccess {bool} reviewed 是否通过审核
+ * @apiSuccess {int} reviewed 是否通过审核
  * @apiSuccess {string} created_at 文章创建时间
  * @apiSuccess {string} updated_at 文章更新时间
  * @apiSuccessExample {json} Success-Example:
@@ -35,11 +35,20 @@ import (
  */
 
 func GetDetail(c *gin.Context)  {
+	userId,_ := c.Get("user")
 	articleId := c.Param("article_id")
 	db := Orm.GetDB()
 	var article Model.Article
-	if err := db.Where("id=?", articleId).First(&article).Error; err != nil {
-		panic(err)
+	if userId != nil {
+		if err := db.Where("id=?", articleId).First(&article).Error; err != nil {
+			panic(err)
+		}
+	} else {
+		if err := db.Where("id=?", articleId).Where("reviewed=?", 1).
+			First(&article).Error; err != nil {
+			panic(err)
+		}
 	}
+
 	c.JSON(200, article.GetData("detail"))
 }
