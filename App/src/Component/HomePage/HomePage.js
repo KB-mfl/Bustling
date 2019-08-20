@@ -1,14 +1,17 @@
 import React from 'react'
 import TopicalImg from './TopicalImg/TopicalImg'
-import {Card, Icon,Radio} from "antd";
+import {Card, Icon,Radio,Result} from "antd";
 import httpService from '../../service'
 import {Link} from "react-router-dom";
+import ArticleCard from "../Article/ArticleCard";
 
 export default class HomePage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            articleDta:[],
+            currentPage: 1,
+            t0tal:0,
+            articleData:[],
             articleType:"life",
             total:0
         }
@@ -19,9 +22,14 @@ export default class HomePage extends React.Component {
     }
 
     getData = () => {
-        httpService.get(`/article/list/:${this.state.articleType}`).then(r=>{
+        const params = {
+            offset: (this.state.currentPage - 1) * 4,
+            limit: 4,
+        };
+        httpService.get(`/article/list/${this.state.articleType}`,{params}).then(r=>{
+            console.log(r.data.articles)
             this.setState({
-                articleType:r.data.data,
+                articleData:r.data.articles,
                 total:r.data.total
             })
         })
@@ -36,8 +44,6 @@ export default class HomePage extends React.Component {
     }
 
     render() {
-        const simpleInformation = this.state.articleDta;
-
         return (
             <div>
                 <div>
@@ -53,23 +59,11 @@ export default class HomePage extends React.Component {
                     <div style={{marginTop:40}}>
                         <span style={{fontWeight:'200px',fontSize:'40px'}}>今日资讯</span>
                     </div>
-                    {simpleInformation.map((item) =>
-                        <Card key={item.key} title={
-                            <div>
-                                <Link to={`/user/article/${item.id}`}>{item.title}</Link>
-                                <span style={{fontSize:15,marginLeft:'85%'}}>作者：<a href='/'>{item.auth}</a></span>
-                            </div>
-                        }>
-                            <div>
-                                {item.sketch}
-                            </div>
-                            <div style={{marginTop:10,marginBottom:5,marginLeft:'85%'}}>
-                                <p>{item.time}</p>
-                                <Icon type='like' style={{marginLeft:20}}/>{item.like}
-                                <Icon type='dislike' style={{marginLeft:20}}/>{item.dislike}
-                            </div>
-                        </Card>
-                    )}
+                    {this.state.articleData ? this.state.articleData.map((item) =>
+                        <ArticleCard paper={item}/>
+                    ):<Card>
+                        <Result title='该版块暂未发表文章'/>
+                    </Card>}
                 </div>
             </div>
 

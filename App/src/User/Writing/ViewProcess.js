@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Icon, Popover, message, Pagination, Tag,Radio} from "antd";
+import {Card, Icon, Popover, message, Pagination, Tag,Radio,Result} from "antd";
 import httpService from '../../service'
 import ArticleCard from "../../Component/Article/ArticleCard";
 export default class ViewProcess extends React.Component{
@@ -69,10 +69,12 @@ export default class ViewProcess extends React.Component{
                 <Card
                     title={title}
                 >
-                    { this.state.papers.map((item)=>(
+                    { this.state.papers ? this.state.papers.map((item)=>(
                         <ArticleCard  key={item.id} paper={item}/>
                         )
-                    )}
+                    ):<Card>
+                        <Result title='暂无审核数据'/>
+                    </Card>}
                 </Card>
                 <Pagination
                     className="pagination"
