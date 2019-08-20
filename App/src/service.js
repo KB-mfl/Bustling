@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from 'store';
 import {message,notification} from 'antd'
 
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'http://localhost:8888';
 
 axios.interceptors.request.use(config => {
     if(store.get('token')){

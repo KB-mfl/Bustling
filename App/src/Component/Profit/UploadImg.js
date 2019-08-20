@@ -38,6 +38,7 @@ class Image extends React.Component {
             this.changeImg(response.filename);
         }
         if(status === 'error') {
+            console.log('error');
             this.setState({loading: false});
             message.error("图片上传失败");
         }
@@ -54,7 +55,7 @@ class Image extends React.Component {
         return (
             <Upload
                 name="file"
-                action="http://localhost:8000/upload"
+                action="http://localhost:8888/upload"
                 listType="picture-card"
                 showUploadList={ false }
                 beforeUpload={ this.beforeUpload }
@@ -62,7 +63,7 @@ class Image extends React.Component {
                 className="upload"
                 multiple={ false }
             >
-                { this.state.imageUrl ? <img alt="avatar" src={ `http://localhost:8000/storage/public/${this.state.imageUrl}` } style={{ width:"100%" }} /> : uploadButton }
+                { this.state.imageUrl ? <img alt="avatar" src={ `http://localhost:8888/static/images/${this.state.imageUrl}` } style={{ width:"100%" }} /> : uploadButton }
             </Upload>
         )
     }
