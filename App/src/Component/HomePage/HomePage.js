@@ -1,49 +1,62 @@
 import React from 'react'
 import TopicalImg from './TopicalImg/TopicalImg'
-import {Card, Icon} from "antd";
+import {Card, Icon,Radio} from "antd";
+import httpService from '../../service'
 import {Link} from "react-router-dom";
 
 export default class HomePage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-
+            articleDta:[],
+            articleType:"life",
+            total:0
         }
     }
+
+    componentDidMount() {
+        this.getData()
+    }
+
+    getData = () => {
+        httpService.get(`/article/list/:${this.state.articleType}`).then(r=>{
+            this.setState({
+                articleType:r.data.data,
+                total:r.data.total
+            })
+        })
+    };
+
+    changeArticleType = (e)=> {
+        this.setState({
+            articleType:e.target.value
+        },function () {
+            this.getData();
+        })
+    }
+
     render() {
-        const simpleInformation = [{
-            key:'title1',
-            title:'标题1',
-            auth:'朱自强',
-            time:"2019-01-09 11:51:51",
-            articleId:'title1',
-            sketch:'这是对内容作出简短介绍的副标题1',
-            like:101,
-            dislike:30
-        },{
-            key:'title2',
-            title:'标题2',
-            auth:'朱紫玲',
-            time:"2019-01-09 11:49:25",
-            articleId:'title2',
-            sketch:'这是对内容作出简短介绍的副标题2',
-            like:101,
-            dislike:30
-        }];
+        const simpleInformation = this.state.articleDta;
 
         return (
             <div>
-                <div style={{width:'100%',height:200}}>
-                    <TopicalImg/>
-                </div>
                 <div>
+                    <div style={{left:'30%'}}>
+                        <Radio.Group defaultValue="life" buttonStyle="solid" onChange={this.changeArticleType}>
+                            <Radio.Button value="life">生活</Radio.Button>
+                            <Radio.Button value="sports">运动</Radio.Button>
+                            <Radio.Button value="study">学习</Radio.Button>
+                            <Radio.Button value="technology">科技</Radio.Button>
+                            <Radio.Button value="game">游戏</Radio.Button>
+                        </Radio.Group>
+                    </div>
                     <div style={{marginTop:40}}>
                         <span style={{fontWeight:'200px',fontSize:'40px'}}>今日资讯</span>
                     </div>
                     {simpleInformation.map((item) =>
                         <Card key={item.key} title={
                             <div>
-                                <Link to={`/user/article/${item.articleId}`}>{item.title}</Link>
+                                <Link to={`/user/article/${item.id}`}>{item.title}</Link>
                                 <span style={{fontSize:15,marginLeft:'85%'}}>作者：<a href='/'>{item.auth}</a></span>
                             </div>
                         }>

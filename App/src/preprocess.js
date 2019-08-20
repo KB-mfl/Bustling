@@ -13,7 +13,7 @@ export default () => new Promise((resolve, reject) => {
         window.authIndex = r.data.role.roleId;
         window.authname=r.data.username;
         window.role=window.roles[window.authIndex].alias;
-        console.log(window.role);
+        window.userId = r.data.id
         resolve();
     }).catch(e => {
         window.role = 'tourist';
