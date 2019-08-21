@@ -60,7 +60,7 @@ export default class HomePage extends React.Component {
                         <span style={{fontWeight:'200px',fontSize:'40px'}}>今日资讯</span>
                     </div>
                     {this.state.articleData ? this.state.articleData.map((item) =>
-                        <ArticleCard paper={item}/>
+                        <ArticleCard paper={item} key={item.id}/>
                     ):<Card>
                         <Result title='该版块暂未发表文章'/>
                     </Card>}

@@ -1,6 +1,6 @@
 import React from 'react'
 import httpService from '../../service';
-import {message, Tag, Icon, Avatar, Comment, Card,Input,Form,Button} from "antd";
+import {message, Tag, Icon, Avatar, Comment, Card,Input,Form,Button,Result} from "antd";
 import {Link} from "react-router-dom";
 import ArticleModal from "./ArticleModal";
 const { TextArea } = Input;
@@ -8,12 +8,22 @@ export default class Articlelayout extends React.Component{
     constructor(props) {
         super(props);
         this.state ={
+            auth:'科比',
             valueComment:'',
             like:100,
             disLike:51,
             isLike:false,
             isDisLike:false,
-            data:null,
+            comment:'',
+            articleData:{
+                title : null,
+                created_at:null,
+                tags:'',
+                views:null,
+                updated_at:null,
+                article_type:null,
+                html_content:null,
+            },
             isShowFirstComment:false,
             valueFirstComment:'',
             isShowSecondComment:false
@@ -22,18 +32,26 @@ export default class Articlelayout extends React.Component{
     }
 
     componentDidMount() {
-        //这里获取文章以及评论
-        // httpService.get('/').then(r=>{
-        //     this.setState({
-        //         data: r.data
-        //     })
-        // }).catch(err=>{
-        //     message.error('获取文章失败');
-        // })
+        this.fetchArticleData();
     }
 
-    fetchData = () =>{
-        ///
+    fetchArticleData = () =>{
+        httpService.get(`article/detail/${this.articleId}`).then(r=>{
+            this.setState({
+                articleData:r.data
+            },function () {
+                this.setState({
+                    comment: this.htmlStringChangeToText(this.state.articleData.html_content)
+                });
+            })
+        })
+    };
+
+    htmlStringChangeToText =(str) => {
+        let dd=str.replace(/<\/?.+?>/g,"");
+        let dds=dd.replace(/ /g,"");//dds为得到后的内容
+        let ddr=dds.replace(/\r\n/g,"").replace(/\n/g,"").replace(/\s/g,"");
+        return ddr;
     }
 
     onChange = (e)=>{
@@ -92,48 +110,22 @@ export default class Articlelayout extends React.Component{
                 })
 
         });
-        console.log('傻逼');
     };
 
     render() {
-        const data ={
-            auth:'朱自强',
-            title:'这是第一篇文章',
-            content:
-                '朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特' +
-                '朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特' +
-                '朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特朱自强最喜欢的球星是科比布莱恩特',
-            time:'2019-01-09 11:51:51',
-            like:100,
-            dislike:51,
-            read:1000,
-            tags:[{key:1,tag:'篮球',url:'https://nba.hupu.com/'},{key:2,tag:'科比',url:'https://nba.hupu.com/'},{key:3,tag:'nba',url:'https://nba.hupu.com/'},{key:4,tag:'唱',url:'https://www.bilibili.com/video/av50768383?from=search&seid=8869599899048816890'},{key:'5',tag:'rap',url:'https://www.bilibili.com/video/av50768383?from=search&seid=8869599899048816890'},{key:6,tag:'跳',url:'https://www.bilibili.com/video/av50768383?from=search&seid=8869599899048816890'}]
-        };
-
-
         const ExampleComment = () => (
             <Comment
                 actions={[
                     <div>
                         <span style={{marginRight:10, userSelect:false}}>喜欢<Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':''}}/>({this.state.like})</span>
                         <span style={{marginRight:10, userSelect:false}}>点灭<Icon type='dislike' onClick={this.addDislike} style={{color:(this.state.isDisLike)?'red':''}}/>({this.state.disLike})</span>
-                        <ArticleModal auth={data.auth}/>
-                        {/*{this.state.isShowFirstComment&&*/}
-                        {/*<div>*/}
-                        {/*    <Form.Item>*/}
-                        {/*        <TextArea rows={3} onChange={this.onChangeValueFirstComment} value={this.state.valueFirstComment}/>*/}
-                        {/*    </Form.Item>*/}
-                        {/*    <Form.Item>*/}
-                        {/*        <Button onClick={this.postComment} htmlType="submit" type='primary'>发送</Button>*/}
-                        {/*    </Form.Item>*/}
-                        {/*</div>*/}
-                        {/*}*/}
+                        <ArticleModal auth={this.state.auth}/>
                     </div>
                 ]}
                 author={<a>科比</a>}
                 avatar={
                     <Avatar
-                        src="http://localhost:8000/storage/public/zQQguxVYkaBLnwaRBTxTJ5.jpg"
+                        src="http://localhost:8888/static/images/0f299c5d-9af6-42e5-9752-54f5768205ec.png"
                         alt="kobe"
                     />
                 }
@@ -151,7 +143,7 @@ export default class Articlelayout extends React.Component{
                     author={<a>詹姆斯</a>}
                     avatar={
                         <Avatar
-                            src="http://localhost:8000/storage/public/zQQguxVYkaBLnwaRBTxTJ5.jpg"
+                            src="http://localhost:8888/static/images/0f299c5d-9af6-42e5-9752-54f5768205ec.png"
                             alt="Han Solo"
                         />
                     }
@@ -165,30 +157,35 @@ export default class Articlelayout extends React.Component{
             </Comment>
         );
 
-        const {valueComment} = this.state
+        const {valueComment} = this.state;
+        const tags = this.state.articleData.tags.split('/');
         return(
             <div>
                 <div>
                     <div>
-                        {data.like-data.dislike>0?
-                            (data.like>=100 && data.like-2*data.dislike>0)?<Tag color="red">精</Tag>:<Tag color="red">良</Tag>
+                        {this.state.like-this.state.dislike>0?
+                            (this.state.like>=100 && this.state.like-2*this.state.dislike>0)?<Tag color="red">精</Tag>:<Tag color="red">良</Tag>
                             :<Tag color='blue'>差</Tag>
                         }
                         {}
-                        <strong>{data.title}</strong>
+                        <strong>
+                            {this.state.articleData.title}
+                        </strong>
                     </div>
                     <div>
-                        <span>{data.time}</span>
-                        <span style={{marginLeft:20}}><Link to={`/user/visit/${data.auth}`}>{data.auth}</Link></span>
+                        <span>{new Date(this.state.articleData.created_at).toLocaleDateString()}</span>
                     </div>
                     <hr/>
                     <div>
-                        {data.content}
+                        {this.state.comment ? this.state.comment:
+                            <Card><Result title='作者太懒了，啥也没写'/></Card>
+                        }
+                        <span style={{float:"right"}}>上次更新时间:{new Date(this.state.articleData.updated_at).toLocaleDateString()}</span>
                     </div>
                     <div style={{marginTop:30}}>
-                        {data.tags.map(item=>
-                            <Tag color='blue' key={item.key}><a href={item.url}>{item.tag}</a></Tag>
-                        )}
+                        {tags ? tags.map((item,index)=>
+                            <Tag color='blue' key={index}>{item}</Tag>
+                        ):''}
                     </div>
                 </div>
                 <Card
