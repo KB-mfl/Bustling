@@ -14,8 +14,6 @@ class profit extends React.Component {
         }
     }
     componentDidMount() {
-        console.log(window.authIndex)
-        console.log(window.authname);
     }
 
     loginOut = () => {
@@ -27,7 +25,6 @@ class profit extends React.Component {
         this.setState({
             [type]:key
         })
-        console.log(this.state.nowTitleKey);
     }
 
     render() {
