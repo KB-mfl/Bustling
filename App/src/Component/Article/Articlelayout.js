@@ -175,7 +175,6 @@ export default class Articlelayout extends React.Component{
                     <div>
                         <span>{new Date(this.state.articleData.created_at).toLocaleDateString()}</span>
                     </div>
-                    <hr/>
                     <div>
                         {this.state.comment ? this.state.comment:
                             <Card><Result title='作者太懒了，啥也没写'/></Card>

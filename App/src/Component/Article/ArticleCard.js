@@ -30,8 +30,15 @@ export default class ArticleCard extends React.Component{
             <Card
             style={{width:'100%'}}
             title= {(
-                <span>{this.props.paper.article_type}{this.props.paper.reviewed?<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a"/>:<Icon type="loading"/>}</span>
-            )}
+                <span>
+                    {this.props.paper.article_type}
+                    <span>
+                        {this.props.paper.reviewed===1 && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a"/>}
+                        {this.props.paper.reviewed===0 && <Icon type='loading'/>}
+                        {this.props.paper.reviewed===-1 && <Icon type="close-circle" theme="twoTone" twoToneColor="red"/>}
+                    </span>
+                </span>
+                )}
             >
                 <Card.Meta
                     avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}

@@ -27,7 +27,6 @@ export default class HomePage extends React.Component {
             limit: 4,
         };
         httpService.get(`/article/list/${this.state.articleType}`,{params}).then(r=>{
-            console.log(r.data.articles)
             this.setState({
                 articleData:r.data.articles,
                 total:r.data.total

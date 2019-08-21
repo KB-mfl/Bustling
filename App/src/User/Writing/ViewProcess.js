@@ -50,6 +50,8 @@ export default class ViewProcess extends React.Component{
         <div>
             <p>审核中<Icon type='loading'/></p>
             <p>完成审核<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a"/></p>
+            <p>完成审核<Icon type="close-circle" theme="twoTone" twoToneColor="red"/></p>
+
         </div>
         );
         const title = (
@@ -63,8 +65,9 @@ export default class ViewProcess extends React.Component{
                     defaultValue={false}
                     buttonStyle="solid"
                     onChange={ e => { this.setState({reviewed:e.target.value}, function(){this.getArticles()}) } } >
-                    <Radio.Button value={false} >审核中</Radio.Button>
-                    <Radio.Button value={true} >已通过</Radio.Button>
+                    <Radio.Button value='0' >审核中</Radio.Button>
+                    <Radio.Button value='1' >已通过</Radio.Button>
+                    <Radio.Button value='-1' >未通过</Radio.Button>
                 </Radio.Group>
                 <Card
                     title={title}
