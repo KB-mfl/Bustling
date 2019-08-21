@@ -57,5 +57,8 @@ func AddApiRoute() {
 		article.GET("detail/:article_id", Article.GetDetail)
 
 		article.GET("revise/:article_id", Article.GetRevise)
+
+		article.POST("reviewed", Article.ReviewedArticle)
+
 	}
 }
