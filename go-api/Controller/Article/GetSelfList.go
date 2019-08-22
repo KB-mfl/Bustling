@@ -16,7 +16,7 @@ import (
  * @apiParam {string} [articleType] 文章类型
  * @apiParam {int} [limit]
  * @apiParam {int} [offset]
- * @apiParam {bool} [reviewed] 是否通过审核
+ * @apiParam {int} [reviewed] 是否通过审核
  * @apiSuccess {int} total 总共文章数量
  * @apiSuccess {string} user_id 作者id
  * @apiSuccess {string} id 文章id

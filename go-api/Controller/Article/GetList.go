@@ -17,6 +17,7 @@ import (
  * @apiParam {int} [limit]
  * @apiParam {int} [offset]
  * @apiParam {int} total 文章总数
+ * @apiParam {int} reviewed 文章审核
  * @apiSuccess {string} user_id 作者id
  * @apiSuccess {string} id 文章id
  * @apiSuccess {string} article_type 文章类型
@@ -61,18 +62,33 @@ func GetList(c *gin.Context)  {
 	fmt.Println(articleType)
 	var limit, _ = strconv.Atoi(c.DefaultQuery("limit", "7"))
 	var offset, _ = strconv.Atoi(c.DefaultQuery("offset", "0"))
+	var reviewed, _ = strconv.Atoi(c.DefaultQuery("reviewed", "1"))
 	var articles []Model.Article
 	var count int
 	db := Orm.GetDB()
+
+	userId, _ := c.Get("user")
+	if userId == nil {
+		reviewed = 1
+	} else {
+		var user Model.User
+		if err := db.Where("id=?", userId).First(&user).Error; err != nil {
+			panic(err)
+		}
+		if user.RoleId != 2 {
+			reviewed = 1
+		}
+	}
+
 	if articleType != "all" {
-		db.Where("article_type=?", articleType).Where("reviewed=?", 1).Find(&articles).Count(&count)
-		if db.Where("article_type=?", articleType).Where("reviewed=?", 1).Limit(limit).
+		db.Where("article_type=?", articleType).Where("reviewed=?", reviewed).Find(&articles).Count(&count)
+		if db.Where("article_type=?", articleType).Where("reviewed=?", reviewed).Limit(limit).
 			Offset(offset).Order("updated_at desc").Find(&articles).Count(&count).RecordNotFound() {
 			return
 		}
 	} else {
-		db.Where("reviewed=?", 1).Find(&articles).Count(&count)
-		if db.Where("reviewed=?", 1).Offset(offset).Limit(limit).
+		db.Where("reviewed=?", reviewed).Find(&articles).Count(&count)
+		if db.Where("reviewed=?", reviewed).Offset(offset).Limit(limit).
 			Order("updated_at desc").Find(&articles).RecordNotFound() {
 			return
 		}
