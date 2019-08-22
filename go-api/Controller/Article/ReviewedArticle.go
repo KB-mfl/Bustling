@@ -4,6 +4,7 @@ import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 )
 
 /**
@@ -12,17 +13,20 @@ import (
  * @apiName ReviewedArticle
  * @apiPermission Admin
  * @apiParam {string} article_id 文章id
- * @apiParam {int} reviewed 审核结果
+ * @apiParam {bool} reviewed 审核结果
+ * @apiParam {string} [reason] 原因
  * @apiParamExample {json} Request-Example
  *{
  *		'article_id': '78fc16d3-35a9-460e-a3e3-4af0ac61052b',
- *      'reviewed': 1
+ *      'reviewed': true,
+ *		'reason': '文章写得挺好的'
  *}
  */
 
 type ReviewedArticleValidate struct {
 	ArticleId string `json:"article_id" binding:"required"`
-	Reviewed  int 	 `json:"reviewed" binding:"required,eq=1|eq=-1"`
+	Reviewed  bool 	 `json:"reviewed"`
+	Reason    string `json:"reason" binding:"required"`
 }
 
 func ReviewedArticle(c *gin.Context) {
@@ -48,7 +52,21 @@ func ReviewedArticle(c *gin.Context) {
 		c.AbortWithStatus(404)
 		return
 	}
-	if err := db.Model(&article).UpdateColumn("reviewed", data.Reviewed).Error; err != nil {
+	var reviewed int
+	if data.Reviewed {
+		reviewed = 1
+	} else {
+		reviewed = -1
+	}
+	if err := db.Create(&Model.ReviewedRecord{
+		UserId:    userId.(uuid.UUID),
+		ArticleId: uuid.FromStringOrNil(data.ArticleId),
+		Result:    data.Reviewed,
+		Reason:    data.Reason,
+	}).Error; err != nil {
+		panic(err)
+	}
+	if err := db.Model(&article).UpdateColumn("reviewed", reviewed).Error; err != nil {
 		panic(err)
 	}
 }
