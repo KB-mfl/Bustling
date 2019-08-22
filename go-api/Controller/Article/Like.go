@@ -38,7 +38,17 @@ func Like(c *gin.Context)  {
 		return
 	}
 	db := Orm.GetDB()
+	var article Model.Article
 	var likeArticle Model.LikeArticle
+	if db.Where("id=?", data.ArticleId).First(&article).RecordNotFound() {
+		c.AbortWithStatus(404)
+		return
+	}
+	if data.Like {
+		db.Model(&article).UpdateColumn("likes", article.Likes + 1)
+	} else {
+		db.Model(&article).UpdateColumn("unlikes", article.Unlikes + 1)
+	}
 	if db.Where("user_id=?", userId).Where("article_id=?", data.ArticleId).
 		First(&likeArticle).RecordNotFound() {
 		db.Create(&Model.LikeArticle{
