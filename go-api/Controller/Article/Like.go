@@ -23,7 +23,7 @@ import (
 
 type LikeValidate struct {
 	ArticleId  uuid.UUID `json:"article_id" binding:"required"`
-	Like       bool   `json:"like" binding:"required,"`
+	Like       bool   	 `json:"like"`
 }
 
 func Like(c *gin.Context)  {
@@ -34,7 +34,8 @@ func Like(c *gin.Context)  {
 	}
 	var data LikeValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
-		panic(err)
+		c.AbortWithStatus(422)
+		return
 	}
 	db := Orm.GetDB()
 	var likeArticle Model.LikeArticle

@@ -63,5 +63,9 @@ func AddApiRoute() {
 		article.DELETE("delete/:article_id", Article.Delete)
 
 		article.PUT("change/:article_id", Article.Change)
+
+		article.POST("like", Article.Like)
+
+		article.DELETE("unlike", Article.UnLike)
 	}
 }
