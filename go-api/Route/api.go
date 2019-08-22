@@ -60,5 +60,7 @@ func AddApiRoute() {
 
 		article.POST("reviewed", Article.ReviewedArticle)
 
+		article.DELETE("delete", Article.Delete)
+		
 	}
 }

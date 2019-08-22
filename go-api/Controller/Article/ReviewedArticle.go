@@ -6,6 +6,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/**
+ * @api {POST} article/reviewed 管理员审核-ReviewedArticle
+ * @apiGroup Article
+ * @apiName ReviewedArticle
+ * @apiPermission Admin
+ * @apiParam {string} article_id 文章id
+ * @apiParam {int} reviewed 审核结果
+ * @apiParamExample {json} Request-Example
+ *{
+ *		'article_id': '78fc16d3-35a9-460e-a3e3-4af0ac61052b',
+ *      'reviewed': 1
+ *}
+ */
+
 type ReviewedArticleValidate struct {
 	ArticleId string `json:"article_id" binding:"required"`
 	Reviewed  int 	 `json:"reviewed" binding:"required,eq=1|eq=-1"`
