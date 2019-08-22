@@ -7,6 +7,26 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+/**
+ * @api {PUT} article/change/:article_id 修改文章-Change
+ * @apiGroup Article
+ * @apiName Change
+ * @apiPermission User
+ * @apiParam {string} title 标题
+ * @apiParam {string} article_type 文章类型
+ * @apiParam {string} tags 文章标签
+ * @apiParam {string} html_content
+ * @apiParam {string} raw_content
+ * @apiParamExample {json} Request-Example:
+ * {
+ * 		'title': '标题',
+ * 		'tags': '标签1/标签2',
+ * 		'article_type': 'study',
+ *		'html_content': '<p style="text-indent:2em;">今天我要看完白夜行</p>',
+ *		'raw_content': '{"blocks":[{"key":"bcoms","text":"今天我要看完白夜行","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{"textIndent":1}}],"entityMap":{}}'
+ * }
+ */
+
 type ChangeArticleValidate struct {
 	Title 		string `json:"title"`
 	Tags 		string `json:"tags"`
