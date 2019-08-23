@@ -70,6 +70,8 @@ func AddApiRoute() {
 		article.DELETE("unlike", Article.UnLike)
 
 		article.PUT("view/:article_id", Article.View)
+
+		article.GET("islike/:article_id", Article.IsLike)
 	}
 	comment := Http.Router.Group("/comment")
 	{
