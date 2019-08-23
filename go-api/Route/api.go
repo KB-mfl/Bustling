@@ -67,5 +67,7 @@ func AddApiRoute() {
 		article.POST("like", Article.Like)
 
 		article.DELETE("unlike", Article.UnLike)
+
+		article.PUT("view/:article_id", Article.View)
 	}
 }
