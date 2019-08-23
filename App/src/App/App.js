@@ -8,30 +8,22 @@ import './TopMenu';
 import LeftMenu from './LeftMenu';
 import AdminRouter from '../Admin'
 import UserRouter from '../User'
-import Dashboard from '../Component/Dashboard/Dashboard'
-import Notification from '../Component/Notification/Notification'
-import HomePage from '../Component/HomePage/HomePage'
-import Manage from '../Admin/Manage/Manage'
-import Writing from "../User/Writing/Writing";
 import LoginOut from "../Component/LoginRegister/LoginOut";
-import LeftDrawer from "./LeftDrawer";
 const { Header, Footer, Sider, Content } = Layout;
 class App extends Component {
     constructor(props){
         super(props);
-        const url = `/${window.role}`;
-        if (!window.location.pathname.match(url)){
-            window.location.href = url;
+        const url = window.role;
+        if (window.location.pathname.split('/')[1]!==url){
+            console.log(123);
+            window.location.href = `/${url}`;
         }
     }
 
     componentDidMount() {
         console.log(window.authInfor);
+        console.log(window.role);
         // console.log(window.location.pathname);
-    }
-
-    componentWillUnmount() {
-        console.log(window.auth);
     }
 
     goToLogin = () => {

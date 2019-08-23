@@ -32,6 +32,9 @@ export default class TextEditor extends React.Component {
     }
 
     onchangeEditorState = (editorState) => {
+        if (editorState.isEmpty()){
+            return message.error('文本编辑不能为空');
+        }
         this.setState({ editorState},function () {
             const  editorState = this.state.editorState;
             const htmlContent = editorState.toHTML();

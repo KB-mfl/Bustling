@@ -1,16 +1,12 @@
 import React from 'react'
 import {Switch,Route,Redirect,BrowserRouter} from "react-router-dom";
 import HomePage from "../Component/HomePage/HomePage";
-import Dashboard from '../Component/HomePage/HomePage'
-import Writing from "./Writing/Writing";
 import Profit from "../Component/Profit/Profit";
-import Notification from '../Component/Notification/Notification'
 import NetPartnerMessage from "../Component/Notification/NotificationItem/NetPartnerMessage";
 import SystemMessage from "../Component/Notification/NotificationItem/SystemMessage";
 import ViewProcess from "./Writing/ViewProcess";
 import WritePaper from "./Writing/WritePaper";
-import ArticleLayout from "../Component/Article/Articlelayout";
-import LeftDrawer from "../App/LeftDrawer";
+import ArticleLayout from "../Component/Article/ArticleLayout";
 
 export default class extends React.Component {
     constructor(props){
@@ -29,7 +25,6 @@ export default class extends React.Component {
                 <Switch>
                     <Route exact path="/user" component={() =><Redirect to="/user/homePage"/>}/>
                     <Route path='/user/homepage' component={HomePage}/>
-                    <Route path='/user/dashboard' component={Dashboard}/>
                     <Route path='/user/writing/writePapers' component={WritePaper}/>
                     <Route path='/user/writing/viewProcess' component={ViewProcess}/>
                     <Route path='/user/profit' component={Profit}/>

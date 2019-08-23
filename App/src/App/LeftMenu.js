@@ -13,7 +13,6 @@ class LeftMenu extends React.Component{
         };
         this.leftMenuList = [
             {key: 'homepage',title:'首页',icon:'key'},
-            {key: 'dashboard', title: '控制中心', icon: 'pie-chart'},
             {key: 'notification', title: '通知', icon: 'notification'},
             {key: 'writing',title:'写作',icon:'read'},
             {key: 'profit', title: '个人中心', icon: 'user'},
@@ -30,11 +29,16 @@ class LeftMenu extends React.Component{
     };
 
     isRole = () =>{
-        const admin ={
+        const admin =[{
             key:'manage',
             title:'设置',
             icon:'setting'
-        };
+        }, {
+            key: 'dashboard',
+            title: '控制中心',
+            icon: 'pie-chart'
+        }];
+
         if (window.auth===0){
             this.leftMenuList.splice(3,1);
             this.leftMenuList.push(admin);
@@ -74,12 +78,12 @@ class LeftMenu extends React.Component{
                 </div>
                 <Menu theme="dark" mode="inline" className="LeftItem" defaultSelectedKeys={[this.getDefaultKey()]}>
                     <Menu.Item key='homepage'>
-                        <Link to='/user/homepage'/>
+                        <Link to={`/${window.role}/homepage`}/>
                         <Icon type='key'/>
                         <span>首页</span>
                     </Menu.Item>
                     <Menu.Item key='dashboard'>
-                        <Link to='/user/dashboard'/>
+                        <Link to='/admin/dashboard'/>
                         <Icon type='pie-chart'/>
                         <span>控制中心</span>
                     </Menu.Item>
@@ -109,16 +113,21 @@ class LeftMenu extends React.Component{
                         <Menu.Item key='viewProcess'><Link to='/user/writing/viewProcess'/><Icon type='clock-circle'/>查看进程</Menu.Item>
                     </SubMenu>
                     }
-                    {window.authIndex===0 && <Menu.Item key='manage'>
-                        <Link to='/user/manage'/>
+                    {window.authIndex===0 && <Menu.Item key='setting'>
+                        <Link to={`/${window.role}/setting`}/>
                         <Icon type='setting'/>
                         <span>设置</span>
                     </Menu.Item>
                     }
                     <Menu.Item key='profit'>
-                        <Link to='/user/profit'/>
+                        <Link to={`/${window.role}/profit`}/>
                         <Icon type='user'/>
                         <span>个人中心</span>
+                    </Menu.Item>
+                    <Menu.Item key='setting'>
+                        <Link to={`/${window.role}/setting`}/>
+                        <Icon type='setting'/>
+                        <span>设置</span>
                     </Menu.Item>
                 </Menu>
             </Layout.Sider>
