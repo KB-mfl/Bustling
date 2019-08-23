@@ -13,5 +13,6 @@ func AddTable()  {
 		"like_article": &Model.LikeArticle{},
 		"reviewed_record": &Model.ReviewedRecord{},
 		"view": &Model.View{},
+		"comment": &Model.Comment{},
 	})
 }

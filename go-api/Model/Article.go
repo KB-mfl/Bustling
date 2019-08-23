@@ -24,6 +24,7 @@ type Article struct {
 	DeletedAt   *time.Time
 
 	User  		User		`gorm:"foreignKey:UserId;association_foreignKey:ID"`
+	Comment     []Comment   `gorm:"foreignKey:ArticleId;association_foreignKey:ID"`
 }
 
 func (article *Article)TableName(scope *gorm.Scope) string {
