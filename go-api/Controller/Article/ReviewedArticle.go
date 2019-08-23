@@ -26,7 +26,7 @@ import (
 type ReviewedArticleValidate struct {
 	ArticleId string `json:"article_id" binding:"required"`
 	Reviewed  bool 	 `json:"reviewed"`
-	Reason    string `json:"reason" binding:"required"`
+	Reason    string `json:"reason"`
 }
 
 func ReviewedArticle(c *gin.Context) {
