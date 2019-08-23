@@ -23,7 +23,7 @@ export default class ArticleLayout extends React.Component{
             valueComment:'',
             like:100,
             disLike:51,
-            isLike:0,
+            isLike:false,
             isDisLike:false,
             comment:'',
             articleData:{
@@ -171,67 +171,99 @@ export default class ArticleLayout extends React.Component{
         this.setState({
             isShowFirstComment:!this.state.isShowFirstComment
         })
+    };
+
+    confirmLike  = () => {
+        httpService.post('article/like',{
+            like:true,
+            article_id: this.articleId
+        }).then(r=>{
+            this.fetchArticleData();
+        })
+    };
+
+    confirmDislike = () =>{
+        httpService.post('article/like',{
+            like:false,
+            article_id:this.articleId
+        }).then(r=>{
+            this.fetchArticleData();
+        })
+    };
+
+    cancelLike = () => {
+        const params = {
+            like:true,
+            article_id:this.articleId
+        }
+        httpService.delete('article/unlike',{params}).then(r=>{
+            this.fetchArticleData();
+        })
+    };
+
+    cancelDislike = () => {
+        const params = {
+            like:false,
+            article_id:this.articleId
+        }
+        httpService.delete('article/unlike',{params}).then(r=>{
+            this.fetchArticleData();
+        })
     }
 
     addLike = () => {
-        const params = {
-            like:true,
-            article_id:this.state.articleData.id
-        };
-        this.setState({
-            isLike:!this.state.isLike,
-        },function () {
-            if(this.state.isLike){
-                httpService.post('article/like',{
-                    like:true,
-                    article_id:this.state.articleData.id
-                }).then(r=>{
-                    this.fetchArticleData()
+        if(this.state.isDisLike){
+            this.setState({
+                isDisLike:!this.state.isDisLike
+            },function () {
+                this.cancelDislike()
+                this.setState({
+                    isLike:!this.state.isLike,
+                },function () {
+                    if (this.state.isLike){
+                        this.confirmLike()
+                    }else
+                        this.cancelLike()
                 })
-            }else {
-                httpService.delete('article/unlike',{params}).then(r=>{
-                    this.fetchArticleData()
-                }).catch(e=>{
-                    console.log(e)
-                })
-            }
-        })
+            })
+        }else{
+            this.setState({
+                isLike:!this.state.isLike,
+            },function () {
+                if (this.state.isLike){
+                    this.confirmLike()
+                }else
+                    this.cancelLike()
+            })
+        }
     };
 
     addDislike =() => {
-        const params = {
-            like:false,
-            article_id:this.state.articleData.id
-        };
-        // if(this.state.isLike){
-        //     this.setState({
-        //         isLike:!this.state.isLike,
-        //     },function () {
-        //         httpService.delete('article/unlike',{params}).catch(e=>{
-        //             console.log(e)
-        //         })
-        //     })
-        // }
-        this.setState({
-            isDisLike:!this.state.isDisLike,
-        },function () {
-            if(this.state.isDisLike){
-                httpService.post('article/like',{
-                    like:false,
-                    article_id:this.state.articleData.id
-                }).then(r=>{
-                    this.fetchArticleData();
-                })
-            }else {
-                httpService.delete('article/unlike',{params}).then(r=>{
-                    this.fetchArticleData();
-                }).catch(e=>{
-                    console.log(e)
-                })
-            }
-        })
-
-    };
+        if(this.state.isLike){
+            this.setState({
+                isLike:!this.state.isLike
+            },function () {
+                this.cancelLike()
+                this.setState({
+                    isDisLike: !this.state.isDisLike
+                }, function () {
+                    if (this.state.isDisLike)
+                        this.confirmDislike()
+                    else
+                        this.cancelDislike()
+                });
+            })
+        }else {
+            this.setState({
+                isDisLike: !this.state.isDisLike
+            }, function () {
+                if (this.state.isDisLike)
+                    this.confirmDislike()
+                else
+                    this.cancelDislike()
+            });
+        }
+    }
 
     render() {
         const ExampleComment = () => (
@@ -270,7 +302,7 @@ export default class ArticleLayout extends React.Component{
                     }
                     content={
                         <p>
-                           科比是我爸爸，你说啥就是啥，湖人总冠军
+                            科比是我爸爸，你说啥就是啥，湖人总冠军
                         </p>
                     }
                 >
