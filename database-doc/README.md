@@ -5,6 +5,7 @@ There are 4 tables now
 + [api_token](./doc/api_token.md)
 + [article](./doc/article.md)
 + [code](./doc/code.md)
++ [comment](./doc/comment.md)
 + [like_article](./doc/like_article.md)
 + [report](./doc/report.md)
 + [role](./doc/role.md)
