@@ -4,7 +4,6 @@ import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 )
 
 /**
@@ -36,11 +35,12 @@ type ChangeArticleValidate struct {
 }
 
 func Change(c *gin.Context)  {
-	userId,_ := c.Get("user")
-	if userId == nil {
+	_user,_ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	db := Orm.GetDB()
 	var articleId = c.Param("article_id")
 	var article Model.Article
@@ -48,7 +48,7 @@ func Change(c *gin.Context)  {
 		c.JSON(404, gin.H{"message":"文章找不到了哦"})
 		return
 	}
-	if article.UserId != userId.(uuid.UUID) {
+	if article.UserId != user.ID {
 		c.AbortWithStatus(403)
 		return
 	}

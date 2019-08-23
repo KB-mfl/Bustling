@@ -38,11 +38,12 @@ type CreateValidate struct {
 }
 
 func Create(c *gin.Context)  {
-	userId,_ := c.Get("user")
-	if userId == nil {
+	_user,_ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	var data CreateValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.AbortWithStatus(422)
@@ -50,7 +51,7 @@ func Create(c *gin.Context)  {
 	}
 	db := Orm.GetDB()
 	db.Create(&Model.Comment{
-		UserId: userId.(uuid.UUID),
+		UserId: 	 user.ID,
 		ArticleId: 	 data.ArticleId,
 		PreId: 		 data.PreId,
 		ReplyUserId: data.ReplyUserId,

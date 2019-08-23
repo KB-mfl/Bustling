@@ -28,11 +28,12 @@ type UnLikeValidate struct {
 }
 
 func UnLike(c *gin.Context)  {
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	var data UnLikeValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.AbortWithStatus(422)
@@ -40,7 +41,6 @@ func UnLike(c *gin.Context)  {
 	}
 	db := Orm.GetDB()
 	var article Model.Article
-	fmt.Println(data.ArticleId)
 	if db.Where("id=?", data.ArticleId).First(&article).RecordNotFound() {
 		c.AbortWithStatus(404)
 		return
@@ -50,7 +50,7 @@ func UnLike(c *gin.Context)  {
 	} else {
 		db.Model(&article).UpdateColumn("unlikes", article.Unlikes - 1)
 	}
-	if err := db.Where("user_id=?", userId).Where("article_id=?", data.ArticleId).
+	if err := db.Where("user_id=?", user.ID).Where("article_id=?", data.ArticleId).
 		Delete(&Model.LikeArticle{}).Error; err != nil {
 		panic(err)
 	}

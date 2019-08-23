@@ -16,11 +16,12 @@ import (
  */
 
 func View(c *gin.Context) {
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	var articleId = c.Param("article_id")
 	db := Orm.GetDB()
 	var article Model.Article
@@ -28,12 +29,12 @@ func View(c *gin.Context) {
 		c.AbortWithStatus(404)
 		return
 	}
-	if db.Where("article_id=?", articleId).Where("user_id=?", userId).
+	if db.Where("article_id=?", articleId).Where("user_id=?", user.ID).
 		Find(&Model.View{}).RecordNotFound() {
 		article_id, _ := uuid.FromString(articleId)
 		db.Create(&Model.View{
 			ArticleId: article_id,
-			UserId: userId.(uuid.UUID),
+			UserId: user.ID,
 		})
 		if err := db.Model(&article).UpdateColumn("views", article.Views + 1).Error; err != nil {
 			panic(err)

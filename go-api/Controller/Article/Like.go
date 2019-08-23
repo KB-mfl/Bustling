@@ -27,11 +27,12 @@ type LikeValidate struct {
 }
 
 func Like(c *gin.Context)  {
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	var data LikeValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.AbortWithStatus(422)
@@ -49,11 +50,11 @@ func Like(c *gin.Context)  {
 	} else {
 		db.Model(&article).UpdateColumn("unlikes", article.Unlikes + 1)
 	}
-	if db.Where("user_id=?", userId).Where("article_id=?", data.ArticleId).
+	if db.Where("user_id=?", user.ID).Where("article_id=?", data.ArticleId).
 		First(&likeArticle).RecordNotFound() {
 		db.Create(&Model.LikeArticle{
 			ArticleId: data.ArticleId,
-			UserId: userId.(uuid.UUID),
+			UserId: user.ID,
 			Like: data.Like,
 		})
 	} else {

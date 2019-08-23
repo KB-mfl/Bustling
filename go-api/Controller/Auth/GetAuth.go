@@ -1,7 +1,6 @@
 package Auth
 
 import (
-	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
 )
@@ -34,16 +33,11 @@ import (
  */
 
 func GetAuth(c *gin.Context)  {
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
-	db := Orm.GetDB()
-	var user Model.User
-	if db.Table("user").Where("id=?", userId).First(&user).RecordNotFound() {
-		c.JSON(404, gin.H{"message":"该用户找不到了哦"})
-		return
-	}
+	user := _user.(Model.User)
 	c.JSON(200, user.GetData("detail"))
 }

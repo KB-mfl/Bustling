@@ -30,14 +30,13 @@ type ReviewedArticleValidate struct {
 }
 
 func ReviewedArticle(c *gin.Context) {
-	userId,_ := c.Get("user")
-	if userId == nil {
+	_user,_ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	db := Orm.GetDB()
-	var user Model.User
-	db.Where("id=?", userId).First(&user)
 	if user.RoleId != 2 {
 		c.AbortWithStatus(403)
 		return
@@ -59,7 +58,7 @@ func ReviewedArticle(c *gin.Context) {
 		reviewed = -1
 	}
 	if err := db.Create(&Model.ReviewedRecord{
-		UserId:    userId.(uuid.UUID),
+		UserId:    user.ID,
 		ArticleId: uuid.FromStringOrNil(data.ArticleId),
 		Result:    data.Reviewed,
 		Reason:    data.Reason,

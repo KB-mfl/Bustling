@@ -32,43 +32,23 @@ type ChangeValidate struct {
 }
 
 func Change(c *gin.Context)  {
-	userId, _ := c.Get("user")
-	db := Orm.GetDB()
-	var user Model.User
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
+	db := Orm.GetDB()
 	var data ChangeValidate
 	if err := c.ShouldBindJSON(&data); err != nil {
 		panic(err)
 	}
-	var username, avatar, introduction string
-	var gender int
-	if data.Username != "" {
-		username = data.Username
-	} else {
-		username = user.Username
+	if err := db.Model(&user).Updates(Model.User{
+		Username: data.Username,
+		Avatar: data.Avatar,
+		Introduction: data.Introduction,
+		Gender: data.Gender,
+	}).Error; err != nil {
+		panic(err)
 	}
-	if data.Avatar != "" {
-		avatar = data.Avatar
-	} else {
-		avatar = user.Avatar
-	}
-	if data.Introduction != "" {
-		introduction = data.Introduction
-	} else {
-		introduction = user.Introduction
-	}
-	if data.Gender != 0 {
-		gender = data.Gender
-	} else {
-		gender = user.Gender
-	}
-	db.Where("id=?", userId).Model(&user).Updates(Model.User{
-		Username: username,
-		Avatar: avatar,
-		Introduction: introduction,
-		Gender: gender,
-	})
 }

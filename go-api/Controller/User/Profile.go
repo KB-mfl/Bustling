@@ -10,7 +10,7 @@ import (
  * @api {GET} user/profile/:user_id 获取用户信息-GetProfile
  * @apiGroup User
  * @apiName Profile
- * @apiPermission User/Admin
+ * @apiPermission All
  * @apiSuccess {string} username 用户名
  * @apiSuccess {string} avatar 头像
  * @apiSuccess {string} email 邮箱
@@ -35,12 +35,7 @@ import (
  */
 
 func Profile(c *gin.Context)  {
-	userId,_ := c.Get("user")
 	db := Orm.GetDB()
-	if userId == nil {
-		c.AbortWithStatus(401)
-		return
-	}
 	otherUserId := c.Param("user_id")
 	var user Model.User
 	if err := db.Where("id=?", otherUserId).First(&user).Error; err != nil {

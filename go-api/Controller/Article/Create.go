@@ -42,13 +42,14 @@ func Create(c *gin.Context)  {
 		c.JSON(422, gin.H{"message": "信息格式不正确哦"})
 		panic(err)
 	}
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 	}
+	user := _user.(Model.User)
 	db := Orm.GetDB()
 	var article = Model.Article{
-		UserId: userId.(uuid.UUID),
+		UserId: user.ID,
 		Title: data.Title,
 		Tags: data.Tags,
 		HtmlContent: data.HtmlContent,

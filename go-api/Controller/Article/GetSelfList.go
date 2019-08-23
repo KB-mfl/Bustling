@@ -59,8 +59,9 @@ import (
 
 func GetSelfList(c *gin.Context)  {
 	userId,_ := uuid.FromString(c.Param("user_id"))
-	authId, _ := c.Get("user")
-	if userId != authId.(uuid.UUID) {
+	_user, _ := c.Get("user")
+	user := _user.(Model.User)
+	if userId != user.ID {
 		c.AbortWithStatus(403)
 		return
 	}

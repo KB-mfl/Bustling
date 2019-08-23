@@ -35,11 +35,11 @@ import (
  */
 
 func GetDetail(c *gin.Context)  {
-	userId,_ := c.Get("user")
+	_user,_ := c.Get("user")
 	articleId := c.Param("article_id")
 	db := Orm.GetDB()
 	var article Model.Article
-	if userId != nil {
+	if _user != nil {
 		if err := db.Where("id=?", articleId).First(&article).Error; err != nil {
 			panic(err)
 		}

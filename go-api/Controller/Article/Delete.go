@@ -15,16 +15,14 @@ import (
  */
 
 func Delete(c *gin.Context) {
-	userId,_ := c.Get("user")
-	if userId == nil {
+	_user,_ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
-	var user Model.User
+	user := _user.(Model.User)
 	db := Orm.GetDB()
-	if err := db.Where("id=?", userId).First(&user).Error; err != nil {
-		panic(err)
-	}
+
 	if user.RoleId != 2 {
 		c.AbortWithStatus(403)
 		return

@@ -27,19 +27,18 @@ type ResetPasswordValidate struct {
 }
 
 func ResetPassword(c *gin.Context)  {
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	var data ResetPasswordValidate
 	if err :=c.ShouldBindJSON(&data); err != nil {
 		c.JSON(422, gin.H{"message":"格式不正确哦"})
 		return
 	}
 	db := Orm.GetDB()
-	var user Model.User
-	db.Where("id=?", userId).First(&user)
 	if !Controller.Sha256Check(user.Password, data.PasswordOld) {
 		c.JSON(403, gin.H{"message":"密码错误"})
 		return

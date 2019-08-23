@@ -3,7 +3,6 @@ package Article
 import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -59,7 +58,6 @@ import (
 
 func GetList(c *gin.Context)  {
 	var articleType = c.Param("articleType")
-	fmt.Println(articleType)
 	var limit, _ = strconv.Atoi(c.DefaultQuery("limit", "7"))
 	var offset, _ = strconv.Atoi(c.DefaultQuery("offset", "0"))
 	var reviewed, _ = strconv.Atoi(c.DefaultQuery("reviewed", "1"))
@@ -67,14 +65,11 @@ func GetList(c *gin.Context)  {
 	var count int
 	db := Orm.GetDB()
 
-	userId, _ := c.Get("user")
-	if userId == nil {
+	_user, _ := c.Get("user")
+	user := _user.(Model.User)
+	if _user == nil {
 		reviewed = 1
 	} else {
-		var user Model.User
-		if err := db.Where("id=?", userId).First(&user).Error; err != nil {
-			panic(err)
-		}
 		if user.RoleId != 2 {
 			reviewed = 1
 		}

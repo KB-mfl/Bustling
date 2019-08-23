@@ -28,18 +28,19 @@ import (
  */
 
 func GetRevise(c *gin.Context)  {
-	userId,_ := c.Get("user")
-	if userId == nil {
+	_user,_ := c.Get("user")
+	if _user == nil {
 		c.AbortWithStatus(401)
 		return
 	}
+	user := _user.(Model.User)
 	articleId := c.Param("article_id")
 	db := Orm.GetDB()
 	var article Model.Article
 	if err := db.Where("id=?", articleId).First(&article).Error; err != nil {
 		panic(err)
 	}
-	if article.UserId != userId.(uuid.UUID) {
+	if article.UserId != user.ID {
 		c.JSON(403,gin.H{"message":"这不是您的文章哦"})
 		return
 	}
