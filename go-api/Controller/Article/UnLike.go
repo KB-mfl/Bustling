@@ -5,6 +5,7 @@ import (
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"strconv"
 )
 
 /**
@@ -21,11 +22,6 @@ import (
  * }
  */
 
-type UnLikeValidate struct {
-	ArticleId uuid.UUID `json:"article_id" binding:"required"`
-	Like      bool      `json:"like"`
-}
-
 func UnLike(c *gin.Context)  {
 	_user, _ := c.Get("user")
 	if _user == nil {
@@ -33,23 +29,20 @@ func UnLike(c *gin.Context)  {
 		return
 	}
 	user := _user.(Model.User)
-	var data UnLikeValidate
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.AbortWithStatus(422)
-		return
-	}
+	articleId := c.Query("article_id")
+	like, _ := strconv.ParseBool(c.Query("like"))
 	db := Orm.GetDB()
 	var article Model.Article
-	if db.Where("id=?", data.ArticleId).First(&article).RecordNotFound() {
+	if db.Where("id=?", articleId).First(&article).RecordNotFound() {
 		c.AbortWithStatus(404)
 		return
 	}
-	if data.Like {
+	if like {
 		db.Model(&article).UpdateColumn("likes", article.Likes - 1)
 	} else {
 		db.Model(&article).UpdateColumn("unlikes", article.Unlikes - 1)
 	}
-	if err := db.Where("user_id=?", user.ID).Where("article_id=?", data.ArticleId).
+	if err := db.Where("user_id=?", user.ID).Where("article_id=?", articleId).
 		Delete(&Model.LikeArticle{}).Error; err != nil {
 		panic(err)
 	}
