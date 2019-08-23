@@ -23,7 +23,7 @@ export default class ArticleLayout extends React.Component{
             valueComment:'',
             like:100,
             disLike:51,
-            isLike:false,
+            isLike:0,
             isDisLike:false,
             comment:'',
             articleData:{
@@ -31,10 +31,13 @@ export default class ArticleLayout extends React.Component{
                 title: null,
                 created_at:null,
                 tags:'',
+                reviewed:0,
                 views:null,
                 updated_at:null,
                 article_type:null,
                 html_content:null,
+                likes:103,
+                unlikes:51,
             },
             isShowFirstComment:false,
             valueFirstComment:'',
@@ -45,6 +48,7 @@ export default class ArticleLayout extends React.Component{
 
     componentDidMount() {
         this.fetchArticleData();
+        this.fetchIsLike()
     }
 
     fetchArticleData = () =>{
@@ -61,14 +65,32 @@ export default class ArticleLayout extends React.Component{
         })
     };
 
+    fetchIsLike = () =>{
+        httpService.get(`article/islike/${this.articleId}`).then(r=>{
+            if(r.data.islike===1){
+                this.setState({
+                    isLike:true
+                },function () {
+                    console.log(this.state.isLike);
+                })
+            }
+            if(r.data.islike===-1){
+                this.setState({
+                    isDisLike:true
+                },function () {
+                    console.log(this.state.isLike);
+                })
+            }
+
+        })
+    }
+
     fetchAuth = () => {
         httpService.get(`user/profile/${this.state.articleData.user_id}`).then(r=>{
             console.log(r.data);
             this.state.authProfit = r.data;
             this.setState({
                 authProfit:r.data
-            },function () {
-                console.log(this.state.authProfit.role.roleId)
             })
 
         }).catch(err=>{
@@ -101,25 +123,6 @@ export default class ArticleLayout extends React.Component{
     postComment = () => {
         console.log(123);
     }
-
-    addLike = () => {
-        this.setState({
-            isLike:!this.state.isLike,
-        },function () {
-            console.log(this.state.isLike);
-            if(this.state.isLike){
-                this.setState({
-                    like:this.state.like+1
-                })
-            }else{
-                this.setState({
-                    like:this.state.like-1
-                })
-            }
-        })
-
-    };
-
 
     showReviewModal = (e) => {
         if(e.target.value==='1'){
@@ -170,20 +173,64 @@ export default class ArticleLayout extends React.Component{
         })
     }
 
+    addLike = () => {
+        const params = {
+            like:true,
+            article_id:this.state.articleData.id
+        };
+        this.setState({
+            isLike:!this.state.isLike,
+        },function () {
+            if(this.state.isLike){
+                httpService.post('article/like',{
+                    like:true,
+                    article_id:this.state.articleData.id
+                }).then(r=>{
+                    this.fetchArticleData()
+                })
+            }else {
+                httpService.delete('article/unlike',{params}).then(r=>{
+                    this.fetchArticleData()
+                }).catch(e=>{
+                    console.log(e)
+                })
+            }
+        })
+    };
+
     addDislike =() => {
+        const params = {
+            like:false,
+            article_id:this.state.articleData.id
+        };
+        // if(this.state.isLike){
+        //     this.setState({
+        //         isLike:!this.state.isLike,
+        //     },function () {
+        //         httpService.delete('article/unlike',{params}).catch(e=>{
+        //             console.log(e)
+        //         })
+        //     })
+        // }
         this.setState({
             isDisLike:!this.state.isDisLike,
         },function () {
-            if(this.state.isDisLike) {
-                this.setState({
-                    disLike: this.state.disLike+1,
+            if(this.state.isDisLike){
+                httpService.post('article/like',{
+                    like:false,
+                    article_id:this.state.articleData.id
+                }).then(r=>{
+                    this.fetchArticleData();
                 })
-            }else
-                this.setState({
-                    disLike:this.state.disLike-1
+            }else {
+                httpService.delete('article/unlike',{params}).then(r=>{
+                    this.fetchArticleData();
+                }).catch(e=>{
+                    console.log(e)
                 })
+            }
+        })
 
-        });
     };
 
     render() {
@@ -268,7 +315,17 @@ export default class ArticleLayout extends React.Component{
                         </p>
                     </div>
                     <div>
-                        {this.state.comment ? <Card>{this.state.comment}</Card>:
+                        {this.state.comment ?
+                            <Card actions={[
+                                <Tooltip placement="topLeft" title="设置" arrowPointAtCenter><Icon type="edit" key="edit" /></Tooltip>,
+                                <Tooltip placement="topLeft" title="喜欢" arrowPointAtCenter><Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':'' ,marginRight:10}}/>{this.state.articleData.likes}</Tooltip>,
+                                <Tooltip placement="topLeft" title="点灭" arrowPointAtCenter><Icon type='dislike' onClick={this.addDislike} style={{color:(this.state.isDisLike)?'red':'', marginRight:10}}/>{this.state.articleData.unlikes}</Tooltip>,
+                            ]}>
+                                <Card.Meta
+                                    description={this.state.comment}
+                                >
+                                </Card.Meta>
+                            </Card>:
                             <Card><Result title='作者太懒了，啥也没写'/></Card>
                         }
                         {window.role==='user'&&<span style={{float:"right"}}>上次更新时间:{new Date(this.state.articleData.updated_at).toLocaleDateString()}</span>}
@@ -277,7 +334,7 @@ export default class ArticleLayout extends React.Component{
                         {tags ? tags.map((item,index)=>
                             <Tag color='blue' key={index}>{item}</Tag>
                         ):''}
-                        {window.role==='admin'&& <span style={{float:"right"}}>
+                        {(window.role==='admin' && this.state.articleData.reviewed===0)&& <span style={{float:"right"}}>
                             <Button style={{marginRight:10}} onClick={this.showReviewModal} value={1}>通过</Button>
                             <Button onClick={this.showReviewModal} value={-1}>不通过</Button>
                         </span>}

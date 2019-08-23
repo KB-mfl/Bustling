@@ -29,8 +29,6 @@ export default class ViewProcess extends React.Component{
             this.setState({
                 papers:r.data.data,
                 total:r.data.total
-            },function () {
-                console.log(r.data)
             });
         }).catch(e=>{
             message.error('获取文章失败');

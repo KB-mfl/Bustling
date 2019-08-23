@@ -18,7 +18,7 @@ export default class ArticleCard extends React.Component{
     render() {
         const title = (
             <div>
-                <Link to={`/user/article/${this.props.paper.id}`}>{`标题:${this.props.paper.title}`}</Link>
+                <Link to={`/${window.role}/article/${this.props.paper.id}`}>{`标题:${this.props.paper.title}`}</Link>
             </div>
         );
         const paperTags=(
