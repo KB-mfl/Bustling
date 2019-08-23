@@ -17,7 +17,7 @@ export default class ReviewArticleCard extends React.Component{
     }
 
     showReviewModal = (e) => {
-        if(e.target.value){
+        if(e.target.value==='1'){
             this.setState({
                 reviewed:true
             })
@@ -35,6 +35,8 @@ export default class ReviewArticleCard extends React.Component{
     };
 
     confirmArticle = () =>{
+        if(!(this.state.reviewed||this.state.reason))
+            return message.error('请输入拒绝的理由')
         httpService.post('article/reviewed',{
             article_id:this.state.articleData.id,
             reviewed:this.state.reviewed,

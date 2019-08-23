@@ -64,9 +64,11 @@ export default class ArticleLayout extends React.Component{
     fetchAuth = () => {
         httpService.get(`user/profile/${this.state.articleData.user_id}`).then(r=>{
             console.log(r.data);
-            this.state.authProfit = r.data
+            this.state.authProfit = r.data;
             this.setState({
                 authProfit:r.data
+            },function () {
+                console.log(this.state.authProfit.role.roleId)
             })
 
         }).catch(err=>{
@@ -120,7 +122,7 @@ export default class ArticleLayout extends React.Component{
 
 
     showReviewModal = (e) => {
-        if(e.target.value){
+        if(e.target.value==='1'){
             this.setState({
                 reviewed:true
             })
@@ -138,6 +140,8 @@ export default class ArticleLayout extends React.Component{
     };
 
     confirmArticle = () =>{
+        if(!(this.state.reviewed||this.state.reason))
+            return message.error('请输入拒绝的理由')
         httpService.post('article/reviewed',{
             article_id:this.state.articleData.id,
             reviewed:this.state.reviewed,
@@ -250,15 +254,15 @@ export default class ArticleLayout extends React.Component{
                                 placement="topLeft"
                                 title={(
                                     <div>
-                                        {window.authIndex===1 && '用户'}
-                                        {window.authIndex===0 && '管理员'}
-                                        {window.authIndex===-1 && '游客'}
+                                        {this.state.authProfit.role.roleId===2 && <p style={{color:"orange"}}>普通用户</p>}
+                                        {this.state.authProfit.role.roleId===1 && <p style={{color:"pink"}}>至尊VIP</p>}
+                                        {this.state.authProfit.role.roleId===-1 && '游客'}
                                     </div>
                                 )}
                                 arrowPointAtCenter>
-                                {window.authIndex===1 && <Icon component={HeartSvg} style={{color: 'hotpink'}}/>}
-                                {window.authIndex===0 && <Icon component={HeartSvg} style={{color: 'black'}}/>}
-                                {window.authIndex===-1 && <Icon component={HeartSvg} style={{color: 'blue'}}/>}
+                                {this.state.authProfit.role.roleId===2 && <Icon component={HeartSvg} style={{color: 'hotpink'}}/>}
+                                {this.state.authProfit.role.roleId===1 && <Icon component={HeartSvg} style={{color: 'black'}}/>}
+                                {this.state.authProfit.role.roleId===-1 && <Icon component={HeartSvg} style={{color: 'blue'}}/>}
                             </Tooltip>
 
                         </p>
@@ -274,8 +278,8 @@ export default class ArticleLayout extends React.Component{
                             <Tag color='blue' key={index}>{item}</Tag>
                         ):''}
                         {window.role==='admin'&& <span style={{float:"right"}}>
-                            <Button style={{marginRight:10}} onClick={this.showReviewModal} value={true}>通过</Button>
-                            <Button onClick={this.showReviewModal} value={false}>不通过</Button>
+                            <Button style={{marginRight:10}} onClick={this.showReviewModal} value={1}>通过</Button>
+                            <Button onClick={this.showReviewModal} value={-1}>不通过</Button>
                         </span>}
                     </div>
                 </div>
