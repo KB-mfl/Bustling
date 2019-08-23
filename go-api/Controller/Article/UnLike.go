@@ -4,7 +4,6 @@ import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 	"strconv"
 )
 
@@ -30,7 +29,12 @@ func UnLike(c *gin.Context)  {
 	}
 	user := _user.(Model.User)
 	articleId := c.Query("article_id")
-	like, _ := strconv.ParseBool(c.Query("like"))
+	_like := c.Query("like")
+	if articleId == "" || _like == "" {
+		c.AbortWithStatus(422)
+		return
+	}
+	like, _ := strconv.ParseBool(_like)
 	db := Orm.GetDB()
 	var article Model.Article
 	if db.Where("id=?", articleId).First(&article).RecordNotFound() {
