@@ -74,5 +74,7 @@ func AddApiRoute() {
 	comment := Http.Router.Group("/comment")
 	{
 		comment.POST("/", Comment.Create)
+
+		comment.DELETE("/:comment_id", Comment.Delete)
 	}
 }
