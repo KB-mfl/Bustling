@@ -4,6 +4,7 @@ import (
 	"Bustling/go-api/Boot/Http"
 	"Bustling/go-api/Controller/Article"
 	"Bustling/go-api/Controller/Auth"
+	"Bustling/go-api/Controller/Comment"
 	"Bustling/go-api/Controller/File"
 	"Bustling/go-api/Controller/User"
 	"Bustling/go-api/Middleware"
@@ -69,5 +70,9 @@ func AddApiRoute() {
 		article.DELETE("unlike", Article.UnLike)
 
 		article.PUT("view/:article_id", Article.View)
+	}
+	comment := Http.Router.Group("/comment")
+	{
+		comment.POST("/", Comment.Create)
 	}
 }

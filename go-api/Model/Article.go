@@ -65,6 +65,8 @@ func (article *Article)GetData(kind string) map[string]interface{} {
 			data["html_content"] = article.HtmlContent
 			data["created_at"] = article.CreatedAt
 			data["updated_at"] = article.UpdatedAt
+			data["likes"] = article.Likes
+			data["unlikes"] = article.Unlikes
 		return data
 	case "revise":
 			data["raw_content"] = article.RawContent

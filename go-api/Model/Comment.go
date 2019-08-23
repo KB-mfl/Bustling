@@ -10,8 +10,8 @@ type Comment struct {
 	ID          uuid.UUID 	`gorm:"primary_key"`
 	ArticleId   uuid.UUID	`gorm:"not null"`
 	UserId      uuid.UUID	`gorm:"not null"`
-	ReplyUserId uuid.UUID
-	PreId       uuid.UUID
+	ReplyUserId uuid.UUID	`gorm:"default:null"`
+	PreId       uuid.UUID	`gorm:"default:null"`
 	Content     string		`gorm:"type:text"`
 	CreatedAt   time.Time
 
