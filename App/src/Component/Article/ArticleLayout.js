@@ -3,6 +3,7 @@ import httpService from '../../service';
 import {message, Tag, Icon, Avatar, Comment, Card, Input, Form, Button, Result, Tooltip, Modal} from "antd";
 import {Link} from "react-router-dom";
 import ArticleModal from "./ArticleModal";
+import store from "store";
 const { TextArea } = Input;
 const HeartSvg = () => (
     <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 1024 1024">
@@ -19,6 +20,7 @@ export default class ArticleLayout extends React.Component{
             authProfit:{
                 role:{}
             },
+            articleInfor:{},
             auth:'科比',
             valueComment:'',
             like:100,
@@ -48,13 +50,14 @@ export default class ArticleLayout extends React.Component{
 
     componentDidMount() {
         this.fetchArticleData();
+        this.fetchArticleInfor();
         this.fetchIsLike()
         this.fetchViews()
     }
 
     fetchArticleData = () =>{
         httpService.get(`article/detail/${this.articleId}`).then(r=>{
-            console.log(r.data);
+            console.log(r.data)
             this.setState({
                 articleData:r.data
             },function () {
@@ -102,6 +105,16 @@ export default class ArticleLayout extends React.Component{
     fetchViews  = () =>{
         httpService.put(`article/view/${this.articleId}`).then(r=>{
             console.log(r.data);
+        })
+    };
+
+    fetchArticleInfor = () =>{
+        httpService.get(`article/revise/${this.articleId}`).then(r=>{
+            this.setState({
+                articleInfor:r.data
+            },function () {
+                console.log(r.data)
+            })
         })
     }
 
@@ -218,56 +231,43 @@ export default class ArticleLayout extends React.Component{
     }
 
     addLike = () => {
+        const { isDisLike, isLike } = this.state;
         if(this.state.isDisLike){
-            this.setState({
-                isDisLike:!this.state.isDisLike
-            },function () {
-                this.cancelDislike()
-                this.setState({
-                    isLike:!this.state.isLike,
-                },function () {
-                    if (this.state.isLike){
-                        this.confirmLike()
-                    }else
-                        this.cancelLike()
-                })
-            })
+            this.setState({isDisLike:!isDisLike});
+            this.cancelDislike()
+            this.setState({isLike:!isLike})
+            if (!isLike){
+                this.confirmLike()
+            }else {
+                this.cancelLike()
+            }
         }else{
-            this.setState({
-                isLike:!this.state.isLike,
-            },function () {
-                if (this.state.isLike){
-                    this.confirmLike()
-                }else
-                    this.cancelLike()
-            })
+            this.setState({isLike:!isLike});
+            if (!isLike){
+                this.confirmLike()
+            }else
+                this.cancelLike()
         }
     };
 
     addDislike =() => {
+        const { isDisLike, isLike } = this.state;
         if(this.state.isLike){
-            this.setState({
-                isLike:!this.state.isLike
-            },function () {
-                this.cancelLike()
-                this.setState({
-                    isDisLike: !this.state.isDisLike
-                }, function () {
-                    if (this.state.isDisLike)
-                        this.confirmDislike()
-                    else
-                        this.cancelDislike()
-                });
-            })
+            this.setState({ isLike:!isLike })
+            this.cancelLike()
+            this.setState({isDisLike: !isDisLike})
+            if (!isDisLike) {
+                this.confirmDislike()
+            }
+            else
+                this.cancelDislike()
         }else {
-            this.setState({
-                isDisLike: !this.state.isDisLike
-            }, function () {
-                if (this.state.isDisLike)
-                    this.confirmDislike()
-                else
-                    this.cancelDislike()
-            });
+            this.setState({isDisLike: !isDisLike})
+            if (!isDisLike) {
+                this.confirmDislike()
+            }
+            else
+                this.cancelDislike()
         }
     }
 
@@ -276,8 +276,8 @@ export default class ArticleLayout extends React.Component{
             <Comment
                 actions={[
                     <div>
-                        <span style={{marginRight:10, userSelect:false}}>喜欢<Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':''}}/>({this.state.like})</span>
-                        <span style={{marginRight:10, userSelect:false}}>点灭<Icon type='dislike' onClick={this.addDislike} style={{color:(this.state.isDisLike)?'red':''}}/>({this.state.disLike})</span>
+                        <span style={{marginRight:10, userSelect:false}}>喜欢<Icon type='like'/>({this.state.like})</span>
+                        <span style={{marginRight:10, userSelect:false}}>点灭<Icon type='dislike'/>({this.state.disLike})</span>
                         <ArticleModal auth={this.state.auth}/>
                     </div>
                 ]}
@@ -318,6 +318,10 @@ export default class ArticleLayout extends React.Component{
 
         const {valueComment} = this.state;
         const tags = this.state.articleData.tags.split('/');
+        const routeInfor = {
+            pathname: '/user/writing/writePapers',
+            query: this.state.articleInfor,
+        }
         return(
             <div>
                 <div>
@@ -339,23 +343,22 @@ export default class ArticleLayout extends React.Component{
                                 placement="topLeft"
                                 title={(
                                     <div>
-                                        {this.state.authProfit.role.roleId===2 && <p style={{color:"orange"}}>普通用户</p>}
-                                        {this.state.authProfit.role.roleId===1 && <p style={{color:"pink"}}>至尊VIP</p>}
+                                        {this.state.authProfit.role.roleId===1 && <p style={{color:"orange"}}>普通用户</p>}
+                                        {this.state.authProfit.role.roleId===2 && <p style={{color:"pink"}}>至尊VIP</p>}
                                         {this.state.authProfit.role.roleId===-1 && '游客'}
                                     </div>
                                 )}
                                 arrowPointAtCenter>
-                                {this.state.authProfit.role.roleId===2 && <Icon component={HeartSvg} style={{color: 'hotpink'}}/>}
-                                {this.state.authProfit.role.roleId===1 && <Icon component={HeartSvg} style={{color: 'black'}}/>}
+                                {this.state.authProfit.role.roleId===1&& <Icon component={HeartSvg} style={{color: 'hotpink'}}/>}
+                                {this.state.authProfit.role.roleId===2 && <Icon component={HeartSvg} style={{color: 'black'}}/>}
                                 {this.state.authProfit.role.roleId===-1 && <Icon component={HeartSvg} style={{color: 'blue'}}/>}
                             </Tooltip>
-
                         </p>
                     </div>
                     <div>
                         {this.state.comment ?
                             <Card actions={[
-                                <Tooltip placement="topLeft" title="设置" arrowPointAtCenter><Icon type="edit" key="edit" /></Tooltip>,
+                                <Tooltip placement="topLeft" title="修改文章" arrowPointAtCenter><Link to={routeInfor} onClick={()=>store.set(('editorState'),this.state.articleInfor.raw_content)}><Icon type="edit" key="edit"/></Link></Tooltip>,
                                 <Tooltip placement="topLeft" title="喜欢" arrowPointAtCenter><Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':'' ,marginRight:10}}/>{this.state.articleData.likes}</Tooltip>,
                                 <Tooltip placement="topLeft" title="点灭" arrowPointAtCenter><Icon type='dislike' onClick={this.addDislike} style={{color:(this.state.isDisLike)?'red':'', marginRight:10}}/>{this.state.articleData.unlikes}</Tooltip>,
                             ]}>

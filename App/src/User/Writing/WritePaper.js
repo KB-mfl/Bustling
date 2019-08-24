@@ -14,10 +14,22 @@ export default class WritePaper extends React.Component{
             htmlContent:'',
             rawContent:''
         }
+        this.query = this.props.location.query;
     }
     componentDidMount() {
-        console.log(this);
+        console.log(this.query);
+        if(this.query){
+            store.set(('title'),this.query.title);
+            store.set(('type'),this.query.article_type);
+            store.set(('tags'),this.query.tags);
+            this.setState({
+                title:store.get('title'),
+                articleType:store.get('type'),
+                tags:store.get('tags')
+            })
+        }
     }
+
 
     changeTitle = (e) => {
         store.set(('title'),e.target.value);
