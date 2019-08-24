@@ -20,7 +20,7 @@ class LeftMenu extends React.Component{
         console.log(props);
     }
     componentWillMount() {
-        this.isRole();
+        console.log(window.authIndex);
     }
 
     getDefaultKey = () => {
@@ -28,35 +28,6 @@ class LeftMenu extends React.Component{
         return sider.key;
     };
 
-    isRole = () =>{
-        const admin =[{
-            key:'manage',
-            title:'设置',
-            icon:'setting'
-        }, {
-            key: 'dashboard',
-            title: '控制中心',
-            icon: 'pie-chart'
-        }];
-
-        if (window.auth===0){
-            this.leftMenuList.splice(3,1);
-            this.leftMenuList.push(admin);
-        }
-        // console.log(this.leftMenuList);
-    };
-
-    // itemClick = ({item, key}) => {
-    //     window.location.href = '/' + window.role + '/' + key
-    // };
-
-    controlCollapse = () => {
-        this.setState({
-            collapsed:!this.state.collapsed,
-        });
-        store.set('collapsed',!this.state.collapsed);
-        console.log(this.state.collapsed);
-    };
     onCollapse = collapsed => {
         console.log(collapsed);
         this.setState({ collapsed });
@@ -82,11 +53,11 @@ class LeftMenu extends React.Component{
                         <Icon type='key'/>
                         <span>首页</span>
                     </Menu.Item>
-                    <Menu.Item key='dashboard'>
+                    {window.authIndex===2 && <Menu.Item key='dashboard'>
                         <Link to='/admin/dashboard'/>
                         <Icon type='pie-chart'/>
                         <span>控制中心</span>
-                    </Menu.Item>
+                    </Menu.Item>}
                     <SubMenu
                     key='notification'
                     title={
@@ -96,8 +67,8 @@ class LeftMenu extends React.Component{
                         </span>
                     }
                     >
-                        <Menu.Item key='netPartnerMessage'><Link to='/user/notification/netPartnerMessage'/><Icon type='twitter'/>网友留言<Badge count={100} style={{ backgroundColor: '#52c41a',boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
-                        <Menu.Item key='systemMessage'><Link to='/user/notification/systemMessage'/><Icon type='sound'/>系统通知<Badge count={10} style={{boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
+                        <Menu.Item key='netPartnerMessage'><Link to={`/${window.role}/notification/netPartnerMessage`}/><Icon type='twitter'/>网友留言<Badge count={100} style={{ backgroundColor: '#52c41a',boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
+                        <Menu.Item key='systemMessage'><Link to={`/${window.role}/notification/systemMessage`}/><Icon type='sound'/>系统通知<Badge count={10} style={{boxShadow: '0 0 0 1px #d9d9d9'}}/></Menu.Item>
                     </SubMenu>
                     {window.authIndex ===1 &&
                     <SubMenu
@@ -109,11 +80,11 @@ class LeftMenu extends React.Component{
                             </span>
                         }
                     >
-                        <Menu.Item key='writePapers'><Link to='/user/writing/writePapers'/><Icon type='edit'/>立即写作</Menu.Item>
-                        <Menu.Item key='viewProcess'><Link to='/user/writing/viewProcess'/><Icon type='clock-circle'/>查看进程</Menu.Item>
+                        <Menu.Item key='writePapers'><Link to={`${window.role}/user/writing/writePapers`}/><Icon type='edit'/>立即写作</Menu.Item>
+                        <Menu.Item key='viewProcess'><Link to={`/${window.role}/writing/viewProcess`}/><Icon type='clock-circle'/>查看进程</Menu.Item>
                     </SubMenu>
                     }
-                    {window.authIndex===0 && <Menu.Item key='setting'>
+                    {window.authIndex===2 && <Menu.Item key='setting'>
                         <Link to={`/${window.role}/setting`}/>
                         <Icon type='setting'/>
                         <span>设置</span>
@@ -123,11 +94,6 @@ class LeftMenu extends React.Component{
                         <Link to={`/${window.role}/profit`}/>
                         <Icon type='user'/>
                         <span>个人中心</span>
-                    </Menu.Item>
-                    <Menu.Item key='setting'>
-                        <Link to={`/${window.role}/setting`}/>
-                        <Icon type='setting'/>
-                        <span>设置</span>
                     </Menu.Item>
                 </Menu>
             </Layout.Sider>
