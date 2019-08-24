@@ -4,6 +4,7 @@ import (
 	"Bustling/go-api/Boot/Orm"
 	"Bustling/go-api/Model"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 	"strconv"
 )
 
@@ -46,8 +47,13 @@ func UnLike(c *gin.Context)  {
 	} else {
 		db.Model(&article).UpdateColumn("unlikes", article.Unlikes - 1)
 	}
-	if err := db.Where("user_id=?", user.ID).Where("article_id=?", articleId).
-		Where("like=?",  like).Delete(&Model.LikeArticle{}).Error; err != nil {
+	var likeArticle Model.LikeArticle
+	_articleId, _ := uuid.FromString(articleId)
+	if err := db.Where(&Model.LikeArticle{
+		UserId:user.ID,
+		ArticleId:_articleId,
+		Like:like,
+	}).Find(&likeArticle).Delete(&likeArticle).Error; err != nil {
 		panic(err)
 	}
 }
