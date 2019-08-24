@@ -14,21 +14,19 @@ export default class WritePaper extends React.Component{
             htmlContent:'',
             rawContent:''
         }
-        this.query = this.props.location.query;
+        this.query =  this.props.location.query
     }
     componentDidMount() {
         console.log(this.query);
-        if(this.query){
-            store.set(('title'),this.query.title);
-            store.set(('type'),this.query.article_type);
-            store.set(('tags'),this.query.tags);
-            this.setState({
-                title:store.get('title'),
-                articleType:store.get('type'),
-                tags:store.get('tags')
-            })
-        }
     }
+    // componentWillUnmount() {
+    //     if (this.query){
+    //         store.remove('title');
+    //         store.remove('type');
+    //         store.remove('tags');
+    //         store.remove('')
+    //     }
+    // }
 
 
     changeTitle = (e) => {
@@ -70,25 +68,41 @@ export default class WritePaper extends React.Component{
             tagString=tagsArr[i]+'/'+tagString;
         }
         const tags = tagString.substr(0,tagString.length-1);
+        console.log(tags);
         if(!(title && tags && articleType && htmlContent && rawContent)){
             return message.error('请确保输入对应完整信息');
         }
-        httpService.post('/article/',{
-            title:title,
-            article_type: articleType,
-            tags: tags,
-            html_content: htmlContent,
-            raw_content: rawContent
-        }).then(r => {
-            message.success('上传成功,等待管理员审核......');
-            store.remove('title');
-            store.remove('type');
-            store.remove('tags');
-            store.remove('editorState');
-            setTimeout(()=>window.location.reload(),2000)
-        }).catch(e=>{
-            message.error('上传失败，请重新上传')
-        })
+
+        if(this.query){
+            httpService.put(`article/change/${this.query.articleId}`,{
+                title:title,
+                article_type: articleType,
+                tags: tags,
+                html_content: htmlContent,
+                raw_content: rawContent
+            }).then(r=>{
+                message.success('文章修改成功');
+            }).catch(err=>{
+                message.error('文章修改失败');
+            })
+        }else {
+            httpService.post('/article/',{
+                title:title,
+                article_type: articleType,
+                tags: tags,
+                html_content: htmlContent,
+                raw_content: rawContent
+            }).then(r => {
+                message.success('上传成功,等待管理员审核......');
+                store.remove('title');
+                store.remove('type');
+                store.remove('tags');
+                store.remove('editorState');
+                setTimeout(()=>window.location.reload(),2000)
+            }).catch(e=>{
+                message.error('上传失败，请重新上传')
+            })
+        }
     };
 
     render() {

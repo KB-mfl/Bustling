@@ -80,7 +80,7 @@ class LeftMenu extends React.Component{
                             </span>
                         }
                     >
-                        <Menu.Item key='writePapers'><Link to={`${window.role}/user/writing/writePapers`}/><Icon type='edit'/>立即写作</Menu.Item>
+                        <Menu.Item key='writePapers'><Link to={`/${window.role}/writing/writePapers`}/><Icon type='edit'/>立即写作</Menu.Item>
                         <Menu.Item key='viewProcess'><Link to={`/${window.role}/writing/viewProcess`}/><Icon type='clock-circle'/>查看进程</Menu.Item>
                     </SubMenu>
                     }

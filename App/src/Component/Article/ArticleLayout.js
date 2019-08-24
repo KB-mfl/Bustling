@@ -91,7 +91,6 @@ export default class ArticleLayout extends React.Component{
 
     fetchAuth = () => {
         httpService.get(`user/profile/${this.state.articleData.user_id}`).then(r=>{
-            console.log(r.data);
             this.state.authProfit = r.data;
             this.setState({
                 authProfit:r.data
@@ -320,7 +319,9 @@ export default class ArticleLayout extends React.Component{
         const tags = this.state.articleData.tags.split('/');
         const routeInfor = {
             pathname: '/user/writing/writePapers',
-            query: this.state.articleInfor,
+            query: {
+                articleId:this.articleId
+            }
         }
         return(
             <div>
@@ -358,7 +359,17 @@ export default class ArticleLayout extends React.Component{
                     <div>
                         {this.state.comment ?
                             <Card actions={[
-                                <Tooltip placement="topLeft" title="修改文章" arrowPointAtCenter><Link to={routeInfor} onClick={()=>store.set(('editorState'),this.state.articleInfor.raw_content)}><Icon type="edit" key="edit"/></Link></Tooltip>,
+                                <Tooltip placement="topLeft" title="修改文章" arrowPointAtCenter>
+                                    <Link to={routeInfor}
+                                          onClick={()=>{
+                                              store.set(('editorState'),this.state.articleInfor.raw_content);
+                                              store.set(('title'),this.state.articleInfor.title);
+                                              store.set(('type'),this.state.articleInfor.article_type);
+                                              store.set(('tags'),this.state.articleInfor.tags.split('/'));
+                                          }}>
+                                        <Icon type="edit" key="edit"/>
+                                    </Link>
+                                </Tooltip>,
                                 <Tooltip placement="topLeft" title="喜欢" arrowPointAtCenter><Icon type='like' onClick={this.addLike} style={{color:(this.state.isLike)?'red':'' ,marginRight:10}}/>{this.state.articleData.likes}</Tooltip>,
                                 <Tooltip placement="topLeft" title="点灭" arrowPointAtCenter><Icon type='dislike' onClick={this.addDislike} style={{color:(this.state.isDisLike)?'red':'', marginRight:10}}/>{this.state.articleData.unlikes}</Tooltip>,
                             ]}>
