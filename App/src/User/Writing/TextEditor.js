@@ -9,34 +9,48 @@ export default class TextEditor extends React.Component {
         super(props);
         this.state = {
             editorState:undefined,
-            submitting:false
+            submitting:false,
+            content:false,
+            isNeedSave:false
         };
         this.changeEditorState = this.props.changeEditorState;
+        this.editorStateIsEmpty = this.props.editorStateIsEmpty
     }
 
 
     componentDidMount () {
-        console.log(store.get('editorState'));
+        console.log(this.state.submitting);
         this.setState({
             editorState: BraftEditor.createEditorState(store.get('editorState') || null)
         })
     }
     componentWillUnmount = () => {
-        if(this.state.submiting){
+        if(this.state.submitting){//未按保存
             return
         }else {
-            message.error('请确定保存文章');
+            if(this.state.content&&this.state.isNeedSave){//有text内容且需要保存
+                return  message.error('请确定保存文章');
+            }else
+                return
         }
     }
 
     onchangeEditorState = (editorState) => {
         if (editorState.isEmpty()){
-            return message.error('文本编辑不能为空');
+            this.setState({
+                content:false
+            })
+            return this.editorStateIsEmpty(this.state.content);
         }
-        this.setState({ editorState},function () {
+        this.setState({editorState,content:true},function () {
+            this.editorStateIsEmpty(this.state.content);
             const  editorState = this.state.editorState;
             const htmlContent = editorState.toHTML();
             const rawContent = editorState.toRAW();
+            if(rawContent!==store.get('editorState'))
+                this.setState({
+                    isNeedSave: true
+                });
             this.setState({
                 htmlContent:htmlContent,
                 rawContent:rawContent,
@@ -49,9 +63,14 @@ export default class TextEditor extends React.Component {
 
     submitContent = () => {
         const rawContent = this.state.editorState.toRAW();
+        if(!store.get('editorState'))
+            message.success('保存成功');
         store.set('editorState',rawContent);
-        message.success('保存成功')
+        this.setState({
+            submitting:true
+        })
     };
+
 
 
     render () {

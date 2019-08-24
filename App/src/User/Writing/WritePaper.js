@@ -1,6 +1,6 @@
 import React from 'react'
 import httpService from '../../service'
-import {Input, Button, message, Card, Icon, Select} from "antd";
+import {Input, Button, message, Card, Icon, Select, Modal} from "antd";
 import TextEditor from "./TextEditor";
 import store from 'store';
 const {TextArea} = Input;
@@ -12,21 +12,20 @@ export default class WritePaper extends React.Component{
             articleType:store.get('type') || null,
             tags:store.get('tags') || [],
             htmlContent:'',
-            rawContent:''
+            rawContent:'',
+            editorStateIsEmpty:false,
+            showArticleSaveModal:false
         }
         this.query =  this.props.location.query
     }
     componentDidMount() {
         console.log(this.query);
     }
-    // componentWillUnmount() {
-    //     if (this.query){
-    //         store.remove('title');
-    //         store.remove('type');
-    //         store.remove('tags');
-    //         store.remove('')
-    //     }
-    // }
+    componentWillUnmount() {
+        if (this.query){
+            store.remove('articleId');
+        }
+    }
 
 
     changeTitle = (e) => {
@@ -42,6 +41,12 @@ export default class WritePaper extends React.Component{
             rawContent:rawContent
         })
     };
+
+    editorStateIsEmpty = (value)=> {
+        this.setState({
+            editorStateIsEmpty:value
+        })
+    }
 
     selectArticleType = (value) =>{
         this.setState({
@@ -64,12 +69,13 @@ export default class WritePaper extends React.Component{
         const tagsArr = this.state.tags;
         const htmlContent = this.state.htmlContent;
         const rawContent = this.state.rawContent;
+        const editorStateIsEmpty = this.state.editorStateIsEmpty
         for (let i=0;i<tagsArr.length;i++){
             tagString=tagsArr[i]+'/'+tagString;
         }
         const tags = tagString.substr(0,tagString.length-1);
         console.log(tags);
-        if(!(title && tags && articleType && htmlContent && rawContent)){
+        if(!(title && tags && articleType && htmlContent && rawContent && editorStateIsEmpty)){
             return message.error('请确保输入对应完整信息');
         }
 
@@ -82,6 +88,10 @@ export default class WritePaper extends React.Component{
                 raw_content: rawContent
             }).then(r=>{
                 message.success('文章修改成功');
+                store.remove('title');
+                store.remove('type');
+                store.remove('tags');
+                store.remove('editorState');
             }).catch(err=>{
                 message.error('文章修改失败');
             })
@@ -105,12 +115,13 @@ export default class WritePaper extends React.Component{
         }
     };
 
+
     render() {
 
         return(
             <div>
                 <Card title='我的写作板'>
-                    <Input type='text' placeholder='请输入你的标题' onChange={this.changeTitle} style={{marginBottom:10}} defaultValue={this.state.title}/>
+                    <Input type='text' placeholder='请输入你的标题' onChange={this.changeTitle} style={{marginBottom:10}} defaultValue={this.state.title||''}/>
                     <div>
                         <Select defaultValue={this.state.articleType||'文章类型'} onChange={this.selectArticleType}>
                             <Select.Option value='sports'>运动</Select.Option>
@@ -129,9 +140,9 @@ export default class WritePaper extends React.Component{
                         >
                         </Select>
                     </div>
-                    <TextEditor changeEditorState={this.changeEditorState}/>
+                    <TextEditor changeEditorState={this.changeEditorState} editorStateIsEmpty={this.editorStateIsEmpty}/>
                 </Card>
-                <Button type='primary' onClick={this.postPapers} style={{marginTop:10,float:"right"}}>提交</Button>
+                <Button type='primary' onClick={this.postPapers} style={{float:"right",marginTop:10}}>提交</Button>
             </div>
         )
     }
