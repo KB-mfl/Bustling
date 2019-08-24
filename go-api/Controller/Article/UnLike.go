@@ -47,7 +47,7 @@ func UnLike(c *gin.Context)  {
 		db.Model(&article).UpdateColumn("unlikes", article.Unlikes - 1)
 	}
 	if err := db.Where("user_id=?", user.ID).Where("article_id=?", articleId).
-		Delete(&Model.LikeArticle{}).Error; err != nil {
+		Where("like=?",  like).Delete(&Model.LikeArticle{}).Error; err != nil {
 		panic(err)
 	}
 }
