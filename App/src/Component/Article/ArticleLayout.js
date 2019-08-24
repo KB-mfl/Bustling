@@ -49,6 +49,7 @@ export default class ArticleLayout extends React.Component{
     componentDidMount() {
         this.fetchArticleData();
         this.fetchIsLike()
+        this.fetchViews()
     }
 
     fetchArticleData = () =>{
@@ -98,6 +99,11 @@ export default class ArticleLayout extends React.Component{
         })
     }
 
+    fetchViews  = () =>{
+        httpService.put(`article/view/${this.articleId}`).then(r=>{
+            console.log(r.data);
+        })
+    }
 
     htmlStringChangeToText =(str) => {
         let dd=str.replace(/<\/?.+?>/g,"");

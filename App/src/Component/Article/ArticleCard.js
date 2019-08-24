@@ -13,6 +13,7 @@ export default class ArticleCard extends React.Component{
         this.setState({
             tags:this.props.paper.tags.split("/")
         })
+        console.log(this.props.paper);
     }
 
     render() {
