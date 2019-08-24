@@ -49,11 +49,15 @@ func UnLike(c *gin.Context)  {
 	}
 	var likeArticle Model.LikeArticle
 	_articleId, _ := uuid.FromString(articleId)
-	if err := db.Where(&Model.LikeArticle{
+	if db.Where(&Model.LikeArticle{
 		UserId:user.ID,
 		ArticleId:_articleId,
 		Like:like,
-	}).First(&likeArticle).Delete(&likeArticle).Error; err != nil {
-		panic(err)
+	}).First(&likeArticle).RecordNotFound() {
+		c.AbortWithStatus(404)
+	} else {
+		if err := db.Delete(&likeArticle).Error; err != nil {
+			panic(err)
+		}
 	}
 }
