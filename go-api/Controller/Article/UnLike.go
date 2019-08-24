@@ -53,7 +53,7 @@ func UnLike(c *gin.Context)  {
 		UserId:user.ID,
 		ArticleId:_articleId,
 		Like:like,
-	}).Find(&likeArticle).Delete(&likeArticle).Error; err != nil {
+	}).First(&likeArticle).Delete(&likeArticle).Error; err != nil {
 		panic(err)
 	}
 }
