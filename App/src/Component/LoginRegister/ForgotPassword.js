@@ -66,31 +66,33 @@ class ForgotPassword extends React.Component{
     getCode = () => {
         console.log(this.state.email);
         const data = {email: this.state.email};
-        this.setState({
-            pendingTime:60
-        });
         httpService.post('auth/code',data).then(r=>{
-            console.log('zhu');
             message.success('邮件发送成功，请及时填写你的验证码');
-            this.penderTime(60);
+            this.setState({
+                pendingTime:60
+            },function () {
+                this.penderTime(60);
+            });
         }).catch(e=>{
-            console.log('zhu1');
-            this.penderTime(60);
+            this.setState({
+                pendingTime:60
+            },function () {
+                this.penderTime(60);
+            });
         })
     };
 
-    penderTime(sending = this.state.pendingTime - 1) {
-        if (sending < 0) {
+    penderTime(pending = this.state.pendingTime - 1) {
+        if (pending < 0) {
             return;
         }
-        this.setState({sending});
-        if (sending > 0) {
+        this.setState({pendingTime:pending});
+        if (pending > 0) {
             setTimeout(this.penderTime.bind(this), 1000);
         }
     }
 
     compareToFirstPassword = (rule, value, callback) => {
-        console.log('1');
         const form = this.props.form;
         if (value && value !== form.getFieldValue('password')) {
             callback('两次密码不一致');
@@ -100,7 +102,6 @@ class ForgotPassword extends React.Component{
     };
 
     validateToNextPassword = (rule, value, callback) => {
-        console.log('2');
         const form = this.props.form;
         if (value && this.state.confirmDirty) {
             form.validateFields(['confirm'], { force: true });
@@ -109,7 +110,6 @@ class ForgotPassword extends React.Component{
     };
 
     handleConfirmBlur = (e) => {
-        console.log('3');
         const value = e.target.value;
         this.setState({ confirmDirty: this.state.confirmDirty || !!value });
     };
